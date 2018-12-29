@@ -1,0 +1,51 @@
+name: KeepChunks
+version: 1.5.8
+api-version: 1.13
+description: Keep specified chunks loaded, even if you're not online!
+author: Geitenijs
+website: https://www.spigotmc.org/resources/23307
+load: POSTWORLD
+
+softdepend: [WorldEdit, WorldGuard, Multiverse-Core, MultiWorld, My_Worlds]
+
+main: com.geitenijs.keepchunks.Main
+
+commands:
+  keepchunks:
+    description: Keep chunks loaded.
+  kc:
+    description: Keep chunks loaded.
+
+permissions:
+  keepchunks.help:
+    default: op
+  keepchunks.reload:
+    default: op
+  keepchunks.list:
+    default: op
+  keepchunks.chunkinfo:
+    default: op
+  keepchunks.keepchunk:
+    default: op
+  keepchunks.keepregion:
+    default: op
+  keepchunks.releaseall:
+    default: op
+  keepchunks.releasechunk:
+    default: op
+  keepchunks.releaseregion:
+    default: op
+  keepchunks.notify.update:
+    default: op
+  keepchunks.*:
+    children:
+      keepchunks.help: true
+      keepchunks.reload: true
+      keepchunks.list: true
+      keepchunks.chunkinfo: true
+      keepchunks.keepchunk: true
+      keepchunks.keepregion: true
+      keepchunks.releaseall: true
+      keepchunks.releasechunk: true
+      keepchunks.releaseregion: true
+      keepchunks.notify.update: true
