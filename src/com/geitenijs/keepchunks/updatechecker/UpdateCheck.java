@@ -1,10 +1,10 @@
 package com.geitenijs.keepchunks.updatechecker;
 
 import com.geitenijs.keepchunks.Strings;
+import com.geitenijs.keepchunks.Utilities;
 import com.google.common.base.Preconditions;
 import com.google.common.io.Resources;
 import com.google.common.net.HttpHeaders;
-import com.geitenijs.keepchunks.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

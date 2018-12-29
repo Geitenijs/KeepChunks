@@ -1,9 +1,9 @@
 package com.geitenijs.keepchunks;
 
+import com.geitenijs.keepchunks.commands.CommandWrapper;
 import com.geitenijs.keepchunks.updatechecker.UpdateCheck;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.geitenijs.keepchunks.commands.CommandWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
