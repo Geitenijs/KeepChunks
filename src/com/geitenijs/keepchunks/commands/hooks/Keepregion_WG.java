@@ -68,6 +68,13 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
                                     }
                                     try {
                                         Main.plugin.getServer().getWorld(world).loadChunk(x, z);
+                                        if (Utilities.config.getBoolean("chunkload.force")) {
+                                            try {
+                                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+                                            } catch (NoSuchMethodError ex) {
+                                                Utilities.consoleMsgPrefixed("Your server version doesn't support force-loaded chunks. " + "Please use the latest build of 1.13.2 to use this functionality.");
+                                            }
+                                        }
                                     } catch (NullPointerException ex) {
                                         if (Utilities.config.getBoolean("general.debug")) {
                                             Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");

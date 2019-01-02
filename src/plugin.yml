@@ -1,5 +1,5 @@
 name: KeepChunks
-version: 1.5.8
+version: 1.5.9
 api-version: 1.13
 description: Keep specified chunks loaded, even if you're not online!
 author: Geitenijs

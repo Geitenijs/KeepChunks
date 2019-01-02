@@ -66,6 +66,7 @@ public class Utilities {
                 + "\n  check: When set to true, the plugin will check for updates. No automatic downloads, just a subtle notification in the console."
                 + "\n  notify: Do you want to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'."
                 + "\nchunkload:"
+                + "\n  force: Forcefully load chunks."
                 + "\n  dynamic: Enable to automatically load newly marked chunks."
                 + "\n  onstartup: Enable to load all marked chunks on server startup."
                 + "\n  onworldload: Enable to load all marked chunks in a world, once the world is loaded in memory.");
@@ -73,6 +74,7 @@ public class Utilities {
         config.addDefault("general.releaseallprotection", true);
         config.addDefault("updates.check", true);
         config.addDefault("updates.notify", true);
+        config.addDefault("chunkload.force", false);
         config.addDefault("chunkload.dynamic", true);
         config.addDefault("chunkload.onstartup", true);
         config.addDefault("chunkload.onworldload", true);
@@ -132,15 +134,20 @@ public class Utilities {
                 final int z = Integer.parseInt(chunkCoordinates[1]);
                 final String world = chunkCoordinates[2];
                 if (config.getBoolean("general.debug")) {
-                    consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + ","
-                            + z + ") in world '" + world + "'.");
+                    consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
                 }
                 try {
                     Main.plugin.getServer().getWorld(world).loadChunk(x, z);
+                    if (config.getBoolean("chunkload.force")) {
+                        try {
+                            Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+                        } catch (NoSuchMethodError ex) {
+                            consoleMsgPrefixed("Your server version doesn't support force-loaded chunks. " + "Please use the latest build of 1.13.2 to use this functionality.");
+                        }
+                    }
                 } catch (NullPointerException ex) {
                     if (config.getBoolean("general.debug")) {
-                        consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world
-                                + "' could not be found. Has it been removed?");
+                        consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
                     }
                 }
             }
@@ -176,6 +183,7 @@ public class Utilities {
         metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
         metrics.addCustomChart(new Metrics.SimplePie("updateCheckEnabled", () -> config.getString("updates.check")));
         metrics.addCustomChart(new Metrics.SimplePie("updateNotificationEnabled", () -> config.getString("updates.notify")));
+        metrics.addCustomChart(new Metrics.SimplePie("chunkloadForceEnabled", () -> config.getString("chunkload.force")));
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadDynamicEnabled", () -> config.getString("chunkload.dynamic")));
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnStartupEnabled", () -> config.getString("chunkload.onstartup")));
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnWorldloadEnabled", () -> config.getString("chunkload.onworldload")));
@@ -186,7 +194,7 @@ public class Utilities {
     }
 
     private static void checkForUpdates() {
-        if (Utilities.config.getBoolean("updates.check")) {
+        if (config.getBoolean("updates.check")) {
             UpdateCheck
                     .of(Main.plugin)
                     .resourceId(Strings.RESOURCEID)
