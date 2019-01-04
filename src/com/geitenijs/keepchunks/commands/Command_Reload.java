@@ -14,32 +14,20 @@ import java.util.List;
 public class Command_Reload implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-
-        if (args[0].equalsIgnoreCase("reload")) {
-            if (s.hasPermission("keepchunks.reload")) {
-                if (args.length == 1) {
-                    Utilities.reloadConfigFile();
-                    Utilities.reloadDataFile();
-                    Hooks.registerHooks();
-                    Utilities.msg(s, "&aConfiguration & hooks reloaded successfully.");
-                } else {
-                    Utilities.msg(s, Strings.RELOADUSAGE);
-                }
-            } else {
-                Utilities.msg(s, Strings.NOPERM);
-            }
+        if (args.length == 1) {
+            Utilities.reloadConfigFile();
+            Utilities.reloadDataFile();
+            Hooks.registerHooks();
+            Utilities.msg(s, "&aConfiguration files & hooks reloaded successfully.");
+        } else {
+            Utilities.msg(s, Strings.RELOADUSAGE);
         }
         return true;
     }
 
     public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
-        if (args[0].equals("reload")) {
-            if (s.hasPermission("keepchunks.reload")) {
-                tabs.clear();
-            }
-            return CommandWrapper.filterTabs(tabs, args);
-        }
-        return null;
+        tabs.clear();
+        return CommandWrapper.filterTabs(tabs, args);
     }
 }

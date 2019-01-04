@@ -24,54 +24,48 @@ import java.util.*;
 public class Releaseregion_WE implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-
         final Set<String> chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
-
-        if (args[1].equalsIgnoreCase("worldedit")) {
-            if (s instanceof Player) {
-                try {
-                    Player player = ((OfflinePlayer) s).getPlayer();
-                    BukkitPlayer bPlayer = BukkitAdapter.adapt(player);
-                    LocalSession session = WorldEdit.getInstance().getSessionManager().get(bPlayer);
-                    final Region sel = session.getSelection(bPlayer.getWorld());
-                    BlockVector3 max = sel.getMaximumPoint();
-                    BlockVector3 min = sel.getMinimumPoint();
-                    Location maxPoint = new Location(player.getWorld(), max.getBlockX(),
-                            max.getBlockY(), max.getBlockZ());
-                    Location minPoint = new Location(player.getWorld(), min.getBlockX(),
-                            min.getBlockY(), min.getBlockZ());
-                    final Chunk chunkMax = maxPoint.getChunk();
-                    final Chunk chunkMin = minPoint.getChunk();
-                    final int maxZ = chunkMax.getZ();
-                    final int maxX = chunkMax.getX();
-                    final int minX = chunkMin.getX();
-                    final int minZ = chunkMin.getZ();
-                    final String world = Objects.requireNonNull(sel.getWorld()).getName();
-                    for (int x = minX; x <= maxX; ++x) {
-                        for (int z = minZ; z <= maxZ; ++z) {
-                            final String chunk = x + "#" + z + "#"
-                                    + world;
-                            if (!chunks.contains(chunk)) {
-                                Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'"
-                                        + world + "'&c isn't marked.");
-                            } else {
-                                chunks.remove(chunk);
-                                Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z
-                                        + ")&f in world &6'" + world + "'&f.");
-                            }
+        if (s instanceof Player) {
+            try {
+                Player player = ((OfflinePlayer) s).getPlayer();
+                BukkitPlayer bPlayer = BukkitAdapter.adapt(player);
+                LocalSession session = WorldEdit.getInstance().getSessionManager().get(bPlayer);
+                final Region sel = session.getSelection(bPlayer.getWorld());
+                BlockVector3 max = sel.getMaximumPoint();
+                BlockVector3 min = sel.getMinimumPoint();
+                Location maxPoint = new Location(player.getWorld(), max.getBlockX(),
+                        max.getBlockY(), max.getBlockZ());
+                Location minPoint = new Location(player.getWorld(), min.getBlockX(),
+                        min.getBlockY(), min.getBlockZ());
+                final Chunk chunkMax = maxPoint.getChunk();
+                final Chunk chunkMin = minPoint.getChunk();
+                final int maxZ = chunkMax.getZ();
+                final int maxX = chunkMax.getX();
+                final int minX = chunkMin.getX();
+                final int minZ = chunkMin.getZ();
+                final String world = Objects.requireNonNull(sel.getWorld()).getName();
+                for (int x = minX; x <= maxX; ++x) {
+                    for (int z = minZ; z <= maxZ; ++z) {
+                        final String chunk = x + "#" + z + "#"
+                                + world;
+                        if (!chunks.contains(chunk)) {
+                            Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'"
+                                    + world + "'&c isn't marked.");
+                        } else {
+                            chunks.remove(chunk);
+                            Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z
+                                    + ")&f in world &6'" + world + "'&f.");
                         }
                     }
-                    Utilities.data.set("chunks", new ArrayList<Object>(chunks));
-                    Utilities.saveDataFile();
-                    Utilities.reloadDataFile();
-                } catch (IncompleteRegionException e) {
-                    Utilities.msg(s, Strings.WEFIRST);
                 }
-            } else {
-                Utilities.msg(s, Strings.ONLYPLAYER);
+                Utilities.data.set("chunks", new ArrayList<Object>(chunks));
+                Utilities.saveDataFile();
+                Utilities.reloadDataFile();
+            } catch (IncompleteRegionException e) {
+                Utilities.msg(s, Strings.WEFIRST);
             }
         } else {
-            Utilities.msg(s, Strings.RELEASEREGIONUSAGE);
+            Utilities.msg(s, Strings.ONLYPLAYER);
         }
         return true;
     }
@@ -146,8 +140,7 @@ public class Releaseregion_WE implements CommandExecutor, TabCompleter {
                     tabs.clear();
                 }
             }
-            return CommandWrapper.filterTabs(tabs, args);
         }
-        return null;
+        return CommandWrapper.filterTabs(tabs, args);
     }
 }

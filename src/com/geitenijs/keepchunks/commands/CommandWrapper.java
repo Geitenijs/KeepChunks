@@ -59,85 +59,136 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
     public static ArrayList<String> filterTabs(ArrayList<String> list, String[] origArgs) {
         if (origArgs.length == 0)
             return list;
-
         Iterator<String> itel = list.iterator();
         String label = origArgs[origArgs.length - 1].toLowerCase();
-
         while (itel.hasNext()) {
             String name = itel.next();
-
             if (name.toLowerCase().startsWith(label))
                 continue;
-
             itel.remove();
         }
-
         return list;
     }
 
     public static String[] getArgs(String[] args) {
         ArrayList<String> newArgs = new ArrayList<>();
-
         for (int i = 0; i < args.length - 1; i++) {
             String s = args[i];
-
             if (s.trim().isEmpty())
                 continue;
-
             newArgs.add(s);
         }
-
         return newArgs.toArray(new String[0]);
     }
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        if (args.length == 0) {
-            return MainCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("help")) {
-            return HelpCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("reload")) {
-            return ReloadCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("list")) {
-            return ListCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("chunkinfo")) {
-            return ChunkinfoCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("keepchunk")) {
-            return KeepchunkCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("keepregion")) {
-            return KeepregionCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("releaseall")) {
-            return ReleaseallCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("releasechunk")) {
-            return ReleasechunkCommand.onCommand(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("releaseregion")) {
-            return ReleaseregionCommand.onCommand(s, c, label, args);
-        } else {
-            Utilities.msg(s, Strings.GAMEPREFIX + "&cThat command does not exist.");
+        if (c.getName().equalsIgnoreCase("keepchunks") || c.getName().equalsIgnoreCase("kc")) {
+            if (args.length == 0) {
+                return MainCommand.onCommand(s, c, label, args);
+            } else if (args[0].equalsIgnoreCase("help")) {
+                if (s.hasPermission("keepchunks.help")) {
+                    return HelpCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("reload")) {
+                if (s.hasPermission("keepchunks.reload")) {
+                    return ReloadCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("list")) {
+                if (s.hasPermission("keepchunks.list")) {
+                    return ListCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("chunkinfo")) {
+                if (s.hasPermission("keepchunks.chunkinfo")) {
+                    return ChunkinfoCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("keepchunk")) {
+                if (s.hasPermission("keepchunks.keepchunk")) {
+                    return KeepchunkCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("keepregion")) {
+                if (s.hasPermission("keepchunks.keepregion")) {
+                    return KeepregionCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("releaseall")) {
+                if (s.hasPermission("keepchunks.releaseall")) {
+                    return ReleaseallCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("releasechunk")) {
+                if (s.hasPermission("keepchunks.releasechunk")) {
+                    return ReleasechunkCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("releaseregion")) {
+                if (s.hasPermission("keepchunks.releaseregion")) {
+                    return ReleaseregionCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else {
+                Utilities.msg(s, Strings.GAMEPREFIX + "&cThat command does not exist.");
+            }
         }
         return true;
     }
 
     public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
-        if (args.length == 1) {
-            return MainTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("help")) {
-            return HelpTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("reload")) {
-            return ReloadTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("list")) {
-            return ListTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("chunkinfo")) {
-            return ChunkinfoTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("keepchunk")) {
-            return KeepchunkTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("keepregion")) {
-            return KeepregionTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("releaseall")) {
-            return ReleaseallTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("releasechunk")) {
-            return ReleasechunkTab.onTabComplete(s, c, label, args);
-        } else if (args[0].equalsIgnoreCase("releaseregion")) {
-            return ReleaseregionTab.onTabComplete(s, c, label, args);
+        if (c.getName().equalsIgnoreCase("keepchunks") || c.getName().equalsIgnoreCase("kc")) {
+            if (args.length == 1) {
+                if (s.hasPermission("keepchunks.help")) {
+                    return MainTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("help")) {
+                if (s.hasPermission("keepchunks.help")) {
+                    return HelpTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("reload")) {
+                if (s.hasPermission("keepchunks.reload")) {
+                    return ReloadTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("list")) {
+                if (s.hasPermission("keepchunks.list")) {
+                    return ListTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("chunkinfo")) {
+                if (s.hasPermission("keepchunks.chunkinfo")) {
+                    return ChunkinfoTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("keepchunk")) {
+                if (s.hasPermission("keepchunks.keepchunk")) {
+                    return KeepchunkTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("keepregion")) {
+                if (s.hasPermission("keepchunks.keepregion")) {
+                    return KeepregionTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("releaseall")) {
+                if (s.hasPermission("keepchunks.releaseall")) {
+                    return ReleaseallTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("releasechunk")) {
+                if (s.hasPermission("keepchunks.releasechunk")) {
+                    return ReleasechunkTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("releaseregion")) {
+                if (s.hasPermission("keepchunks.releaseregion")) {
+                    return ReleaseregionTab.onTabComplete(s, c, label, args);
+                }
+            }
         }
         return null;
     }

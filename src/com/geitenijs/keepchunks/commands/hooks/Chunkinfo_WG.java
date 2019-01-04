@@ -1,6 +1,5 @@
 package com.geitenijs.keepchunks.commands.hooks;
 
-import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.CommandWrapper;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -24,48 +23,43 @@ import java.util.Objects;
 public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-
-        if (args[1].equalsIgnoreCase("worldguard")) {
-            final String region = args[2];
-            final String world = args[3];
-            if (Bukkit.getWorld(world) == null) {
-                Utilities.msg(s,
-                        "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
-            } else {
-                World realWorld = Bukkit.getWorld(world);
-                com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(realWorld);
-                RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(weWorld);
-                assert manager != null;
-                if (manager.getRegion(region) == null) {
-                    Utilities.msg(s, "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
-                } else {
-                    BlockVector3 max = Objects.requireNonNull(manager.getRegion(region)).getMaximumPoint();
-                    BlockVector3 min = Objects.requireNonNull(manager.getRegion(region)).getMinimumPoint();
-                    Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(),
-                            max.getBlockZ());
-                    Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(),
-                            min.getBlockZ());
-                    final Chunk chunkMax = maxPoint.getChunk();
-                    final Chunk chunkMin = minPoint.getChunk();
-                    final int maxPointX = maxPoint.getBlockX();
-                    final int maxPointZ = maxPoint.getBlockZ();
-                    final int minPointX = minPoint.getBlockX();
-                    final int minPointZ = minPoint.getBlockZ();
-                    final int maxZ = chunkMax.getZ();
-                    final int maxX = chunkMax.getX();
-                    final int minX = chunkMin.getX();
-                    final int minZ = chunkMin.getZ();
-                    Utilities.msg(s, "&2WorldGuard region &f'" + region + "'&2:");
-                    Utilities.msg(s, "");
-                    Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX
-                            + ", " + maxZ + ")");
-                    Utilities.msg(s, "&fCoordinates: &9(" + minPointX + ", " + minPointZ + ") ("
-                            + maxPointX + ", " + maxPointZ + ")");
-                    Utilities.msg(s, "&fWorld: &c" + world);
-                }
-            }
+        final String region = args[2];
+        final String world = args[3];
+        if (Bukkit.getWorld(world) == null) {
+            Utilities.msg(s,
+                    "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
         } else {
-            Utilities.msg(s, Strings.CHUNKINFOUSAGE);
+            World realWorld = Bukkit.getWorld(world);
+            com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(realWorld);
+            RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(weWorld);
+            assert manager != null;
+            if (manager.getRegion(region) == null) {
+                Utilities.msg(s, "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
+            } else {
+                BlockVector3 max = Objects.requireNonNull(manager.getRegion(region)).getMaximumPoint();
+                BlockVector3 min = Objects.requireNonNull(manager.getRegion(region)).getMinimumPoint();
+                Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(),
+                        max.getBlockZ());
+                Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(),
+                        min.getBlockZ());
+                final Chunk chunkMax = maxPoint.getChunk();
+                final Chunk chunkMin = minPoint.getChunk();
+                final int maxPointX = maxPoint.getBlockX();
+                final int maxPointZ = maxPoint.getBlockZ();
+                final int minPointX = minPoint.getBlockX();
+                final int minPointZ = minPoint.getBlockZ();
+                final int maxZ = chunkMax.getZ();
+                final int maxX = chunkMax.getX();
+                final int minX = chunkMin.getX();
+                final int minZ = chunkMin.getZ();
+                Utilities.msg(s, "&2WorldGuard region &f'" + region + "'&2:");
+                Utilities.msg(s, "");
+                Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX
+                        + ", " + maxZ + ")");
+                Utilities.msg(s, "&fCoordinates: &9(" + minPointX + ", " + minPointZ + ") ("
+                        + maxPointX + ", " + maxPointZ + ")");
+                Utilities.msg(s, "&fWorld: &c" + world);
+            }
         }
         return true;
     }
@@ -73,25 +67,22 @@ public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
         String[] newArgs = CommandWrapper.getArgs(args);
-        if (args[1].equals("worldguard")) {
-            if (newArgs.length == 2) {
-                tabs.add("<region>");
-            }
-            if (s instanceof Player) {
-                Player player = (Player) s;
-                Location loc = player.getLocation();
-                String locSerialized = loc.getWorld().getName() + "," + loc.getChunk().getX() + "," + loc.getChunk().getZ();
-                String[] locString = locSerialized.split(",");
-                if (newArgs.length == 3) {
-                    tabs.add(locString[0]);
-                }
-            } else {
-                if (newArgs.length == 3) {
-                    tabs.add("<world>");
-                }
-            }
-            return CommandWrapper.filterTabs(tabs, args);
+        if (newArgs.length == 2) {
+            tabs.add("<region>");
         }
-        return null;
+        if (s instanceof Player) {
+            Player player = (Player) s;
+            Location loc = player.getLocation();
+            String locSerialized = loc.getWorld().getName() + "," + loc.getChunk().getX() + "," + loc.getChunk().getZ();
+            String[] locString = locSerialized.split(",");
+            if (newArgs.length == 3) {
+                tabs.add(locString[0]);
+            }
+        } else {
+            if (newArgs.length == 3) {
+                tabs.add("<world>");
+            }
+        }
+        return CommandWrapper.filterTabs(tabs, args);
     }
 }
