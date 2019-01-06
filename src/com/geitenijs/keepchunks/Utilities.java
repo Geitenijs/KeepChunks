@@ -66,7 +66,7 @@ public class Utilities {
                 + "\n  check: When set to true, the plugin will check for updates. No automatic downloads, just a subtle notification in the console."
                 + "\n  notify: Do you want to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'."
                 + "\nchunkload:"
-                + "\n  force: Forcefully load chunks."
+                + "\n  force: Forcefully load chunks. (Requires the latest build of 1.13.2)"
                 + "\n  dynamic: Enable to automatically load newly marked chunks."
                 + "\n  onstartup: Enable to load all marked chunks on server startup."
                 + "\n  onworldload: Enable to load all marked chunks in a world, once the world is loaded in memory.");
