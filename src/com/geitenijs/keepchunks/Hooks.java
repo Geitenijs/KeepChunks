@@ -28,7 +28,17 @@ public class Hooks {
             return;
         }
         String exactWorldEditVersion = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
-        int worldEditVersion = Integer.parseInt(exactWorldEditVersion.replace(".", "").substring(0, 3));
+        int worldEditVersion;
+        try {
+            worldEditVersion = Integer.parseInt(exactWorldEditVersion.replace(".", "").substring(0, 3));
+        } catch (Exception ex) {
+            WorldEdit = false;
+            incompatibleWorldEdit = true;
+            if (Utilities.config.getBoolean("general.debug")) {
+                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_INCOMPATIBLE);
+            }
+            return;
+        }
         if (worldEditVersion == 700) {
             WorldEdit = true;
             incompatibleWorldEdit = false;
@@ -55,7 +65,17 @@ public class Hooks {
             return;
         }
         String exactWorldGuardVersion = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
-        int worldGuardVersion = Integer.parseInt(exactWorldGuardVersion.replace(".", "").substring(0, 3));
+        int worldGuardVersion;
+        try {
+            worldGuardVersion = Integer.parseInt(exactWorldGuardVersion.replace(".", "").substring(0, 3));
+        } catch (Exception ex) {
+            WorldGuard = false;
+            incompatibleWorldGuard = true;
+            if (Utilities.config.getBoolean("general.debug")) {
+                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_INCOMPATIBLE);
+            }
+            return;
+        }
         if (worldGuardVersion == 700) {
             WorldGuard = true;
             incompatibleWorldGuard = false;
