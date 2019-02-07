@@ -78,10 +78,8 @@ public class Releaseregion_WG implements CommandExecutor, TabCompleter {
         if (s instanceof Player) {
             Player player = (Player) s;
             Location loc = player.getLocation();
-            String locSerialized = loc.getWorld().getName() + "," + loc.getChunk().getX() + "," + loc.getChunk().getZ();
-            String[] locString = locSerialized.split(",");
             if (newArgs.length == 3) {
-                tabs.add(locString[0]);
+                tabs.add(loc.getWorld().getName());
             }
         } else {
             if (newArgs.length == 3) {

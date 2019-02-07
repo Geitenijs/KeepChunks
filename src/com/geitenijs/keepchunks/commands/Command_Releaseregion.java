@@ -109,25 +109,23 @@ public class Command_Releaseregion implements CommandExecutor, TabCompleter {
             if (s instanceof Player) {
                 Player player = (Player) s;
                 Location loc = player.getLocation();
-                String locSerialized = loc.getWorld().getName() + "," + loc.getChunk().getX() + "," + loc.getChunk().getZ();
-                String[] locString = locSerialized.split(",");
                 if (Hooks.WorldEdit) {
                     return WEReleaseregionTab.onTabComplete(s, c, label, args);
                 } else {
                     if (newArgs.length == 2) {
-                        tabs.add(locString[1]);
+                        tabs.add(String.valueOf(loc.getChunk().getX()));
                     }
                     if (newArgs.length == 3) {
-                        tabs.add(locString[2]);
+                        tabs.add(String.valueOf(loc.getChunk().getZ()));
                     }
                     if (newArgs.length == 4) {
-                        tabs.add(locString[1]);
+                        tabs.add(String.valueOf(loc.getChunk().getX()));
                     }
                     if (newArgs.length == 5) {
-                        tabs.add(locString[2]);
+                        tabs.add(String.valueOf(loc.getChunk().getZ()));
                     }
                     if (newArgs.length == 6) {
-                        tabs.add(locString[0]);
+                        tabs.add(loc.getWorld().getName());
                     }
                     if (newArgs.length > 6) {
                         tabs.clear();

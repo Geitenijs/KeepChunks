@@ -94,8 +94,6 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
         String[] newArgs = CommandWrapper.getArgs(args);
         Player player = (Player) s;
         Location loc = player.getLocation();
-        String locSerialized = loc.getWorld().getName() + "," + loc.getChunk().getX() + "," + loc.getChunk().getZ();
-        String[] locString = locSerialized.split(",");
         if (args[1].equals("worldedit")) {
             tabs.clear();
             return CommandWrapper.filterTabs(tabs, args);
@@ -119,41 +117,39 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
                 final String world = Objects.requireNonNull(sel.getWorld()).getName();
-                String weLocSerialized = world + "," + minX + "," + minZ + "," + maxX + "," + maxZ;
-                String[] weLocString = weLocSerialized.split(",");
                 if (newArgs.length == 2) {
-                    tabs.add(weLocString[1]);
+                    tabs.add(String.valueOf(minX));
                 }
                 if (newArgs.length == 3) {
-                    tabs.add(weLocString[2]);
+                    tabs.add(String.valueOf(minZ));
                 }
                 if (newArgs.length == 4) {
-                    tabs.add(weLocString[3]);
+                    tabs.add(String.valueOf(maxX));
                 }
                 if (newArgs.length == 5) {
-                    tabs.add(weLocString[4]);
+                    tabs.add(String.valueOf(maxZ));
                 }
                 if (newArgs.length == 6) {
-                    tabs.add(weLocString[0]);
+                    tabs.add(world);
                 }
                 if (newArgs.length > 6) {
                     tabs.clear();
                 }
             } catch (IncompleteRegionException e) {
                 if (newArgs.length == 2) {
-                    tabs.add(locString[1]);
+                    tabs.add(String.valueOf(loc.getChunk().getX()));
                 }
                 if (newArgs.length == 3) {
-                    tabs.add(locString[2]);
+                    tabs.add(String.valueOf(loc.getChunk().getZ()));
                 }
                 if (newArgs.length == 4) {
-                    tabs.add(locString[1]);
+                    tabs.add(String.valueOf(loc.getChunk().getX()));
                 }
                 if (newArgs.length == 5) {
-                    tabs.add(locString[2]);
+                    tabs.add(String.valueOf(loc.getChunk().getZ()));
                 }
                 if (newArgs.length == 6) {
-                    tabs.add(locString[0]);
+                    tabs.add(loc.getWorld().getName());
                 }
                 if (newArgs.length > 6) {
                     tabs.clear();
