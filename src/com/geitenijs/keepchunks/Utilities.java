@@ -78,32 +78,11 @@ public class Utilities {
         config.addDefault("chunkload.dynamic", true);
         config.addDefault("chunkload.onstartup", true);
         config.addDefault("chunkload.onworldload", true);
-        config.set("general.automaticupdates", null);
-        config.set("general.exposeos", null);
-        config.set("other.auto-update", null);
-        config.set("other.debug", null);
-        config.set("other", null);
-        config.set("updater-enabled", null);
-        config.set("update-checker", null);
-        config.set("dynamicload", null);
-        config.set("debug", null);
         data.options().header(Strings.ASCIILOGO
                 + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
                 "\nInformation & Support: " + Strings.WEBSITE
                 + "\n\nUnless you know what you're doing, it's best not to touch this file. All configurable options can be found in config.yml");
-        data.set("uuid", null);
-        data.set("version", null);
-        final Set<String> chunksList = new HashSet<>(config.getStringList("chunks"));
-        final Set<String> newChunksList = new HashSet<>(data.getStringList("chunks"));
-        if (!chunksList.isEmpty()) {
-            if (newChunksList.isEmpty()) {
-                data.set("chunks", null);
-                data.addDefault("chunks", new ArrayList<>(chunksList));
-            }
-        } else {
-            data.addDefault("chunks", new ArrayList<>());
-        }
-        config.set("chunks", null);
+        data.addDefault("chunks", new ArrayList<>());
         config.options().copyHeader(true);
         config.options().copyDefaults(true);
         data.options().copyHeader(true);
