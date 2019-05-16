@@ -16,9 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
 
@@ -39,7 +37,6 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
     }
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        final Set<String> chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("current")) {
                 if (s instanceof Player) {
@@ -55,7 +52,7 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                     Utilities.msg(s, "&fChunk coords: &6(" + x + ", " + z + ")");
                     Utilities.msg(s, "&fCoordinates: &9(" + playerX + ", " + playerZ + ")");
                     Utilities.msg(s, "&fWorld: &c" + world);
-                    if (chunks.contains(chunk)) {
+                    if (Utilities.chunks.contains(chunk)) {
                         Utilities.msg(s, "&fMarked by KC: &2Yes");
                     } else {
                         Utilities.msg(s, "&fMarked by KC: &4No");
@@ -102,7 +99,7 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                     Utilities.msg(s, "");
                     Utilities.msg(s, "&fChunk coords: &6(" + x + ", " + z + ")");
                     Utilities.msg(s, "&fWorld: &c" + world);
-                    if (chunks.contains(chunk)) {
+                    if (Utilities.chunks.contains(chunk)) {
                         Utilities.msg(s, "&fMarked by KC: &2Yes");
                     } else {
                         Utilities.msg(s, "&fMarked by KC: &4No");
@@ -146,9 +143,6 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                 if (newArgs.length == 4) {
                     tabs.add(String.valueOf(loc.getChunk().getZ()));
                 }
-                if (newArgs.length > 4) {
-                    tabs.clear();
-                }
             } else {
                 if (newArgs.length == 2) {
                     tabs.add("<0>");
@@ -158,9 +152,6 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                 }
                 if (newArgs.length == 4) {
                     tabs.add("<world>");
-                }
-                if (newArgs.length > 4) {
-                    tabs.clear();
                 }
             }
         }

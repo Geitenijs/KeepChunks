@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
@@ -17,22 +18,38 @@ import java.util.List;
 public class Events implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onChunkUnload(final ChunkUnloadEvent e) {
+    public void onChunkUnload(ChunkUnloadEvent e) {
         final Chunk currentChunk = e.getChunk();
         final String chunk = currentChunk.getX() + "#" + currentChunk.getZ() + "#"
                 + currentChunk.getWorld().getName();
-        if (new HashSet<Object>(Utilities.data.getStringList("chunks")).contains(chunk)) {
-            e.setCancelled(true);
+        if (new HashSet<>(Utilities.chunks).contains(chunk)) {
+            try {
+                e.setCancelled(true);
+            } catch (NoSuchMethodError ignored) {
+            }
+        }
+        if (Utilities.config.getBoolean("chunkload.all")) {
+            if (new HashSet<>(Utilities.chunkloadAll).contains(chunk)) {
+                try {
+                    e.setCancelled(true);
+                } catch (NoSuchMethodError ignored) {
+                }
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onWorldUnload(final WorldUnloadEvent e) {
-        final List<String> chunks = Utilities.data.getStringList("chunks");
+    public void onWorldUnload(WorldUnloadEvent e) {
         final List<String> worlds = new ArrayList<>();
-        for (final String chunk : chunks) {
+        for (final String chunk : Utilities.chunks) {
             final String world = chunk.split("#")[2];
             worlds.add(world.toLowerCase());
+        }
+        if (Utilities.config.getBoolean("chunkload.all")) {
+            for (final String chunk : Utilities.chunkloadAll) {
+                final String world = chunk.split("#")[2];
+                worlds.add(world.toLowerCase());
+            }
         }
         if (worlds.contains(e.getWorld().getName().toLowerCase())) {
             e.setCancelled(true);
@@ -40,10 +57,21 @@ public class Events implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onWorldLoad(final WorldLoadEvent e) {
+    public void onChunkLoad(ChunkLoadEvent e) {
+        if (Utilities.config.getBoolean("chunkload.all")) {
+            final Chunk currentChunk = e.getChunk();
+            final String chunk = currentChunk.getX() + "#"
+                    + currentChunk.getZ() + "#" + currentChunk.getWorld().getName();
+            if (!Utilities.chunks.contains(chunk)) {
+                Utilities.chunkloadAll.add(chunk);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onWorldLoad(WorldLoadEvent e) {
         if (Utilities.config.getBoolean("chunkload.onworldload")) {
-            final HashSet<String> chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
-            for (final String chunk : chunks) {
+            for (final String chunk : Utilities.chunks) {
                 final String[] chunkCoordinates = chunk.split("#");
                 final int x = Integer.parseInt(chunkCoordinates[0]);
                 final int z = Integer.parseInt(chunkCoordinates[1]);
@@ -53,13 +81,6 @@ public class Events implements Listener {
                 }
                 try {
                     Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                    if (Utilities.config.getBoolean("chunkload.force")) {
-                        try {
-                            Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                        } catch (NoSuchMethodError ex) {
-                            Utilities.consoleMsgPrefixed("Your server version doesn't support force-loaded chunks. " + "Please use the latest build of 1.13.2 to use this functionality.");
-                        }
-                    }
                 } catch (NullPointerException ex) {
                     if (Utilities.config.getBoolean("general.debug")) {
                         Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");

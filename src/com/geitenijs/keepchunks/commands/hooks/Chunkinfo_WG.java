@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
 
@@ -30,14 +29,15 @@ public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
                     "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
         } else {
             World realWorld = Bukkit.getWorld(world);
+            assert realWorld != null;
             com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(realWorld);
             RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(weWorld);
             assert manager != null;
             if (manager.getRegion(region) == null) {
                 Utilities.msg(s, "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
             } else {
-                BlockVector3 max = Objects.requireNonNull(manager.getRegion(region)).getMaximumPoint();
-                BlockVector3 min = Objects.requireNonNull(manager.getRegion(region)).getMinimumPoint();
+                BlockVector3 max = manager.getRegion(region).getMaximumPoint();
+                BlockVector3 min = manager.getRegion(region).getMinimumPoint();
                 Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(),
                         max.getBlockZ());
                 Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(),

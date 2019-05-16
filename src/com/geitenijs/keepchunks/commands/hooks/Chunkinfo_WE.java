@@ -21,7 +21,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
 
@@ -34,6 +33,7 @@ public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
                 final Region sel = session.getSelection(bPlayer.getWorld());
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
+                assert player != null;
                 Location maxPoint = new Location(player.getWorld(), max.getBlockX(),
                         max.getBlockY(), max.getBlockZ());
                 Location minPoint = new Location(player.getWorld(), min.getBlockX(),
@@ -48,7 +48,7 @@ public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
                 final int maxX = chunkMax.getX();
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
-                final String world = Objects.requireNonNull(sel.getWorld()).getName();
+                final String world = sel.getWorld().getName();
                 Utilities.msg(s, "&2Your current WorldEdit selection:");
                 Utilities.msg(s, "");
                 Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX
@@ -67,7 +67,6 @@ public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
 
     public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
-        tabs.clear();
         return CommandWrapper.filterTabs(tabs, args);
     }
 }

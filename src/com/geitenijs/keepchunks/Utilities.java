@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 
 public class Utilities {
@@ -26,10 +25,14 @@ public class Utilities {
     private static File dataFile = new File(Main.plugin.getDataFolder(), "data.yml");
     private static boolean updateAvailable;
     private static String updateVersion;
+    public static HashSet<String> chunks;
+    public static HashSet<String> chunkloadAll;
 
     static {
         config = YamlConfiguration.loadConfiguration(new File(Main.plugin.getDataFolder(), "config.yml"));
         data = YamlConfiguration.loadConfiguration(new File(Main.plugin.getDataFolder(), "data.yml"));
+        chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
+        chunkloadAll = new HashSet<>();
     }
 
     static void startupText() {
@@ -66,18 +69,19 @@ public class Utilities {
                 + "\n  check: When set to true, the plugin will check for updates. No automatic downloads, just a subtle notification in the console."
                 + "\n  notify: Do you want to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'."
                 + "\nchunkload:"
-                + "\n  force: Forcefully load chunks. (Requires the latest build of 1.13.2)"
                 + "\n  dynamic: Enable to automatically load newly marked chunks."
                 + "\n  onstartup: Enable to load all marked chunks on server startup."
-                + "\n  onworldload: Enable to load all marked chunks in a world, once the world is loaded in memory.");
+                + "\n  onworldload: Enable to load all marked chunks in a world, once the world is loaded in memory."
+                + "\n  all: Do you want to prevent all chunks from unloading, until you reload the plugin/restart your server? Warning: This may cause a lot of lag when not regularly reloading " + Strings.PLUGIN + "! (not working properly on 1.14)");
         config.addDefault("general.debug", false);
         config.addDefault("general.releaseallprotection", true);
         config.addDefault("updates.check", true);
         config.addDefault("updates.notify", true);
-        config.addDefault("chunkload.force", false);
         config.addDefault("chunkload.dynamic", true);
         config.addDefault("chunkload.onstartup", true);
         config.addDefault("chunkload.onworldload", true);
+        config.addDefault("chunkload.all", false);
+        config.set("chunkload.force", null);
         data.options().header(Strings.ASCIILOGO
                 + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
                 "\nInformation & Support: " + Strings.WEBSITE
@@ -106,7 +110,6 @@ public class Utilities {
 
     static void loadChunks() {
         if (config.getBoolean("chunkload.onstartup")) {
-            final Set<String> chunks = new HashSet<>(data.getStringList("chunks"));
             for (final String chunk : chunks) {
                 final String[] chunkCoordinates = chunk.split("#");
                 final int x = Integer.parseInt(chunkCoordinates[0]);
@@ -117,11 +120,10 @@ public class Utilities {
                 }
                 try {
                     Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                    if (config.getBoolean("chunkload.force")) {
+                    if (Main.version.contains("v1_14_R1")) {
                         try {
                             Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                        } catch (NoSuchMethodError ex) {
-                            consoleMsgPrefixed("Your server version doesn't support force-loaded chunks. " + "Please use the latest build of 1.13.2 to use this functionality.");
+                        } catch (NoSuchMethodError ignored) {
                         }
                     }
                 } catch (NullPointerException ex) {
@@ -143,7 +145,7 @@ public class Utilities {
 
     static void startMetrics() {
         Metrics metrics = new Metrics(Main.plugin);
-        metrics.addCustomChart(new Metrics.SingleLineChart("loadedChunks", () -> data.getStringList("chunks").size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("loadedChunks", () -> chunks.size()));
         metrics.addCustomChart(new Metrics.SimplePie("worldeditVersion", () -> {
             final Plugin p = Bukkit.getPluginManager().getPlugin("WorldEdit");
             if (!(p instanceof WorldEditPlugin)) {
@@ -162,10 +164,10 @@ public class Utilities {
         metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
         metrics.addCustomChart(new Metrics.SimplePie("updateCheckEnabled", () -> config.getString("updates.check")));
         metrics.addCustomChart(new Metrics.SimplePie("updateNotificationEnabled", () -> config.getString("updates.notify")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadForceEnabled", () -> config.getString("chunkload.force")));
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadDynamicEnabled", () -> config.getString("chunkload.dynamic")));
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnStartupEnabled", () -> config.getString("chunkload.onstartup")));
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnWorldloadEnabled", () -> config.getString("chunkload.onworldload")));
+        metrics.addCustomChart(new Metrics.SimplePie("chunkloadAllEnabled", () -> config.getString("chunkload.all")));
     }
 
     static void done() {

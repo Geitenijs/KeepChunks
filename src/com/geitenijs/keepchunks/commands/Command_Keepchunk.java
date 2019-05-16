@@ -12,21 +12,18 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Command_Keepchunk implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        final Set<String> chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("current")) {
                 if (s instanceof Player) {
                     final Chunk currentChunk = ((Player) s).getLocation().getChunk();
                     final String chunk = currentChunk.getX() + "#"
                             + currentChunk.getZ() + "#" + currentChunk.getWorld().getName();
-                    if (chunks.contains(chunk)) {
+                    if (Utilities.chunks.contains(chunk)) {
                         Utilities.msg(s,
                                 "&cChunk &f(" + currentChunk.getX() + "," + currentChunk.getZ()
                                         + ")&c in world &f'" + currentChunk.getWorld().getName()
@@ -35,8 +32,8 @@ public class Command_Keepchunk implements CommandExecutor, TabCompleter {
                         final String world = currentChunk.getWorld().getName();
                         final int x = currentChunk.getX();
                         final int z = currentChunk.getZ();
-                        chunks.add(chunk);
-                        Utilities.data.set("chunks", new ArrayList<Object>(chunks));
+                        Utilities.chunks.add(chunk);
+                        Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();
                         if (Utilities.config.getBoolean("chunkload.dynamic")) {
@@ -45,11 +42,10 @@ public class Command_Keepchunk implements CommandExecutor, TabCompleter {
                             }
                             try {
                                 Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                if (Utilities.config.getBoolean("chunkload.force")) {
+                                if (Main.version.contains("v1_14_R1")) {
                                     try {
                                         Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                                    } catch (NoSuchMethodError ex) {
-                                        Utilities.consoleMsgPrefixed("Your server version doesn't support force-loaded chunks. " + "Please use the latest build of 1.13.2 to use this functionality.");
+                                    } catch (NoSuchMethodError ignored) {
                                     }
                                 }
                             } catch (NullPointerException ex) {
@@ -74,12 +70,12 @@ public class Command_Keepchunk implements CommandExecutor, TabCompleter {
                     final int z = Integer.parseInt(args[3]);
                     final String world = args[4];
                     final String chunk = x + "#" + z + "#" + world;
-                    if (chunks.contains(chunk)) {
+                    if (Utilities.chunks.contains(chunk)) {
                         Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world
                                 + "'&c is already marked.");
                     } else {
-                        chunks.add(chunk);
-                        Utilities.data.set("chunks", new ArrayList<Object>(chunks));
+                        Utilities.chunks.add(chunk);
+                        Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();
                         if (Utilities.config.getBoolean("chunkload.dynamic")) {
@@ -88,11 +84,10 @@ public class Command_Keepchunk implements CommandExecutor, TabCompleter {
                             }
                             try {
                                 Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                if (Utilities.config.getBoolean("chunkload.force")) {
+                                if (Main.version.contains("v1_14_R1")) {
                                     try {
                                         Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                                    } catch (NoSuchMethodError ex) {
-                                        Utilities.consoleMsgPrefixed("Your server version doesn't support force-loaded chunks. " + "Please use the latest build of 1.13.2 to use this functionality.");
+                                    } catch (NoSuchMethodError ignored) {
                                     }
                                 }
                             } catch (NullPointerException ex) {
@@ -128,16 +123,13 @@ public class Command_Keepchunk implements CommandExecutor, TabCompleter {
                 Player player = (Player) s;
                 Location loc = player.getLocation();
                 if (newArgs.length == 2) {
-                    tabs.add(loc.getWorld().getName());
-                }
-                if (newArgs.length == 3) {
                     tabs.add(String.valueOf(loc.getChunk().getX()));
                 }
-                if (newArgs.length == 4) {
+                if (newArgs.length == 3) {
                     tabs.add(String.valueOf(loc.getChunk().getZ()));
                 }
-                if (newArgs.length > 4) {
-                    tabs.clear();
+                if (newArgs.length == 4) {
+                    tabs.add(loc.getWorld().getName());
                 }
             } else {
                 if (newArgs.length == 2) {
@@ -148,9 +140,6 @@ public class Command_Keepchunk implements CommandExecutor, TabCompleter {
                 }
                 if (newArgs.length == 4) {
                     tabs.add("<world>");
-                }
-                if (newArgs.length > 4) {
-                    tabs.clear();
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.geitenijs.keepchunks.commands;
 
+import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import org.bukkit.command.Command;
@@ -21,6 +22,19 @@ public class Command_Releaseall implements CommandExecutor, TabCompleter {
                     return true;
                 }
             }
+            for (final String chunk : Utilities.chunks) {
+                final String[] chunkCoordinates = chunk.split("#");
+                final int x = Integer.parseInt(chunkCoordinates[0]);
+                final int z = Integer.parseInt(chunkCoordinates[1]);
+                final String world = chunkCoordinates[2];
+                if (Main.version.contains("v1_14_R1")) {
+                    try {
+                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+            Utilities.chunks.clear();
             Utilities.data.set("chunks", new ArrayList<>());
             Utilities.saveDataFile();
             Utilities.reloadDataFile();

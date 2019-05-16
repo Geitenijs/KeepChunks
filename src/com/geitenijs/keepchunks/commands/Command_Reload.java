@@ -19,6 +19,10 @@ public class Command_Reload implements CommandExecutor, TabCompleter {
             Utilities.reloadDataFile();
             Hooks.registerHooks();
             Utilities.msg(s, "&aConfiguration files & hooks reloaded successfully.");
+            if (Utilities.config.getBoolean("chunkload.all")) {
+                Utilities.chunkloadAll.clear();
+                Utilities.msg(s, "&a&oAll chunks have been released (all).");
+            }
         } else {
             Utilities.msg(s, Strings.RELOADUSAGE);
         }

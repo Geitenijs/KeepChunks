@@ -25,7 +25,6 @@ import java.util.*;
 public class Keepregion_WE implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        final Set<String> chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
         if (s instanceof Player) {
             try {
                 Player player = ((OfflinePlayer) s).getPlayer();
@@ -34,6 +33,7 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 final Region sel = session.getSelection(bPlayer.getWorld());
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
+                assert player != null;
                 Location maxPoint = new Location(player.getWorld(), max.getBlockX(),
                         max.getBlockY(), max.getBlockZ());
                 Location minPoint = new Location(player.getWorld(), min.getBlockX(),
@@ -44,15 +44,15 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 final int maxX = chunkMax.getX();
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
-                final String world = Objects.requireNonNull(sel.getWorld()).getName();
+                final String world = sel.getWorld().getName();
                 for (int x = minX; x <= maxX; ++x) {
                     for (int z = minZ; z <= maxZ; ++z) {
                         final String chunk = x + "#" + z + "#" + world;
-                        if (chunks.contains(chunk)) {
+                        if (Utilities.chunks.contains(chunk)) {
                             Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world
                                     + "'&c is already marked.");
                         } else {
-                            chunks.add(chunk);
+                            Utilities.chunks.add(chunk);
                             Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world
                                     + "'&f.");
                             if (Utilities.config.getBoolean("chunkload.dynamic")) {
@@ -61,11 +61,10 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                                 }
                                 try {
                                     Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                    if (Utilities.config.getBoolean("chunkload.force")) {
+                                    if (Main.version.contains("v1_14_R1")) {
                                         try {
                                             Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                                        } catch (NoSuchMethodError ex) {
-                                            Utilities.consoleMsgPrefixed("Your server version doesn't support force-loaded chunks. " + "Please use the latest build of 1.13.2 to use this functionality.");
+                                        } catch (NoSuchMethodError ignored) {
                                         }
                                     }
                                 } catch (NullPointerException ex) {
@@ -77,7 +76,7 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                         }
                     }
                 }
-                Utilities.data.set("chunks", new ArrayList<Object>(chunks));
+                Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                 Utilities.saveDataFile();
                 Utilities.reloadDataFile();
             } catch (IncompleteRegionException e) {
@@ -95,7 +94,6 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
         Player player = (Player) s;
         Location loc = player.getLocation();
         if (args[1].equals("worldedit")) {
-            tabs.clear();
             return CommandWrapper.filterTabs(tabs, args);
         }
         if (args[1].equals("coords")) {
@@ -106,6 +104,7 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 final Region sel = session.getSelection(bPlayer.getWorld());
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
+                assert weplayer != null;
                 Location maxPoint = new Location(weplayer.getWorld(), max.getBlockX(), max.getBlockY(),
                         max.getBlockZ());
                 Location minPoint = new Location(weplayer.getWorld(), min.getBlockX(), min.getBlockY(),
@@ -116,7 +115,7 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 final int maxX = chunkMax.getX();
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
-                final String world = Objects.requireNonNull(sel.getWorld()).getName();
+                final String world = sel.getWorld().getName();
                 if (newArgs.length == 2) {
                     tabs.add(String.valueOf(minX));
                 }
@@ -131,9 +130,6 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 }
                 if (newArgs.length == 6) {
                     tabs.add(world);
-                }
-                if (newArgs.length > 6) {
-                    tabs.clear();
                 }
             } catch (IncompleteRegionException e) {
                 if (newArgs.length == 2) {
@@ -150,9 +146,6 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 }
                 if (newArgs.length == 6) {
                     tabs.add(loc.getWorld().getName());
-                }
-                if (newArgs.length > 6) {
-                    tabs.clear();
                 }
             }
         }

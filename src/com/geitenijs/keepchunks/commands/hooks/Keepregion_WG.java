@@ -23,7 +23,6 @@ import java.util.*;
 public class Keepregion_WG implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        final Set<String> chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
         final String region = args[2];
         final String world = args[3];
         if (Bukkit.getWorld(world) == null) {
@@ -31,14 +30,15 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
                     "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
         } else {
             World realWorld = Bukkit.getWorld(world);
+            assert realWorld != null;
             com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(realWorld);
             RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(weWorld);
             assert manager != null;
             if (manager.getRegion(region) == null) {
                 Utilities.msg(s, "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
             } else {
-                BlockVector3 max = Objects.requireNonNull(manager.getRegion(region)).getMaximumPoint();
-                BlockVector3 min = Objects.requireNonNull(manager.getRegion(region)).getMinimumPoint();
+                BlockVector3 max = manager.getRegion(region).getMaximumPoint();
+                BlockVector3 min = manager.getRegion(region).getMinimumPoint();
                 Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(),
                         max.getBlockZ());
                 Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(),
@@ -52,11 +52,11 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
                 for (int x = minX; x <= maxX; ++x) {
                     for (int z = minZ; z <= maxZ; ++z) {
                         final String chunk = x + "#" + z + "#" + world;
-                        if (chunks.contains(chunk)) {
+                        if (Utilities.chunks.contains(chunk)) {
                             Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world
                                     + "'&c is already marked.");
                         } else {
-                            chunks.add(chunk);
+                            Utilities.chunks.add(chunk);
                             Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world
                                     + "'&f.");
                             if (Utilities.config.getBoolean("chunkload.dynamic")) {
@@ -65,11 +65,10 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
                                 }
                                 try {
                                     Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                    if (Utilities.config.getBoolean("chunkload.force")) {
+                                    if (Main.version.contains("v1_14_R1")) {
                                         try {
                                             Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                                        } catch (NoSuchMethodError ex) {
-                                            Utilities.consoleMsgPrefixed("Your server version doesn't support force-loaded chunks. " + "Please use the latest build of 1.13.2 to use this functionality.");
+                                        } catch (NoSuchMethodError ignored) {
                                         }
                                     }
                                 } catch (NullPointerException ex) {
@@ -81,7 +80,7 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
                         }
                     }
                 }
-                Utilities.data.set("chunks", new ArrayList<Object>(chunks));
+                Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                 Utilities.saveDataFile();
                 Utilities.reloadDataFile();
             }

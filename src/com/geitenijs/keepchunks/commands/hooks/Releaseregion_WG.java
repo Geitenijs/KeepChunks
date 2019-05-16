@@ -1,5 +1,6 @@
 package com.geitenijs.keepchunks.commands.hooks;
 
+import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.CommandWrapper;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -21,7 +22,6 @@ import java.util.*;
 public class Releaseregion_WG implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        final Set<String> chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
         final String region = args[2];
         final String world = args[3];
         if (Bukkit.getWorld(world) == null) {
@@ -29,14 +29,15 @@ public class Releaseregion_WG implements CommandExecutor, TabCompleter {
                     "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
         } else {
             World realWorld = Bukkit.getWorld(world);
+            assert realWorld != null;
             com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(realWorld);
             RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(weWorld);
             assert manager != null;
             if (manager.getRegion(region) == null) {
                 Utilities.msg(s, "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
             } else {
-                BlockVector3 max = Objects.requireNonNull(manager.getRegion(region)).getMaximumPoint();
-                BlockVector3 min = Objects.requireNonNull(manager.getRegion(region)).getMinimumPoint();
+                BlockVector3 max = manager.getRegion(region).getMaximumPoint();
+                BlockVector3 min = manager.getRegion(region).getMinimumPoint();
                 Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(),
                         max.getBlockZ());
                 Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(),
@@ -51,17 +52,23 @@ public class Releaseregion_WG implements CommandExecutor, TabCompleter {
                     for (int z = minZ; z <= maxZ; ++z) {
                         final String chunk = x + "#" + z + "#"
                                 + world;
-                        if (!chunks.contains(chunk)) {
+                        if (!Utilities.chunks.contains(chunk)) {
                             Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'"
                                     + world + "'&c isn't marked.");
                         } else {
-                            chunks.remove(chunk);
+                            Utilities.chunks.remove(chunk);
+                            if (Main.version.contains("v1_14_R1")) {
+                                try {
+                                    Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                                } catch (Exception ignored) {
+                                }
+                            }
                             Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z
                                     + ")&f in world &6'" + world + "'&f.");
                         }
                     }
                 }
-                Utilities.data.set("chunks", new ArrayList<Object>(chunks));
+                Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                 Utilities.saveDataFile();
                 Utilities.reloadDataFile();
             }

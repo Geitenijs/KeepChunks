@@ -1,6 +1,7 @@
 package com.geitenijs.keepchunks.commands;
 
 import com.geitenijs.keepchunks.Hooks;
+import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.hooks.Releaseregion_WE;
@@ -13,9 +14,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Command_Releaseregion implements CommandExecutor, TabCompleter {
 
@@ -36,7 +35,6 @@ public class Command_Releaseregion implements CommandExecutor, TabCompleter {
     }
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        final Set<String> chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("worldedit")) {
                 if (Hooks.WorldEdit) {
@@ -72,17 +70,23 @@ public class Command_Releaseregion implements CommandExecutor, TabCompleter {
                     for (int x = minX; x <= maxX; ++x) {
                         for (int z = minZ; z <= maxZ; ++z) {
                             final String chunk = x + "#" + z + "#" + world;
-                            if (!chunks.contains(chunk)) {
+                            if (!Utilities.chunks.contains(chunk)) {
                                 Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world
                                         + "'&c isn't marked.");
                             } else {
-                                chunks.remove(chunk);
+                                Utilities.chunks.remove(chunk);
+                                if (Main.version.contains("v1_14_R1")) {
+                                    try {
+                                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                                    } catch (Exception ignored) {
+                                    }
+                                }
                                 Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z + ")&f in world &6'"
                                         + world + "'&f.");
                             }
                         }
                     }
-                    Utilities.data.set("chunks", new ArrayList<Object>(chunks));
+                    Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                     Utilities.saveDataFile();
                     Utilities.reloadDataFile();
                 } catch (NumberFormatException ex) {
