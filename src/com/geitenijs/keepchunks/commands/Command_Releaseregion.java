@@ -16,6 +16,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Integer.max;
+import static java.lang.Integer.min;
+
 public class Command_Releaseregion implements CommandExecutor, TabCompleter {
 
     private CommandExecutor WEReleaseregion;
@@ -62,10 +65,14 @@ public class Command_Releaseregion implements CommandExecutor, TabCompleter {
         } else if (args.length == 7) {
             if (args[1].equalsIgnoreCase("coords")) {
                 try {
-                    final int minX = Integer.parseInt(args[2]);
-                    final int minZ = Integer.parseInt(args[3]);
-                    final int maxX = Integer.parseInt(args[4]);
-                    final int maxZ = Integer.parseInt(args[5]);
+                    final int X1 = Integer.parseInt(args[2]);
+                    final int Z1 = Integer.parseInt(args[3]);
+                    final int X2 = Integer.parseInt(args[4]);
+                    final int Z2 = Integer.parseInt(args[5]);
+                    final int minX = min(X1, X2);
+                    final int minZ = min(Z1, Z2);
+                    final int maxX = max(X1, X2);
+                    final int maxZ = max(Z1, Z2);
                     final String world = args[6];
                     for (int x = minX; x <= maxX; ++x) {
                         for (int z = minZ; z <= maxZ; ++z) {
