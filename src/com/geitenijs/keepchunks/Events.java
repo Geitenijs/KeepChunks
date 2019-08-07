@@ -92,8 +92,7 @@ public class Events implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onUpdateAvailable(PlayerJoinEvent e) {
-        if ((e.getPlayer().hasPermission("keepchunks.notify.update")) && Utilities.config.getBoolean("updates.check") && Utilities.config.getBoolean("updates.notify")
-                && Utilities.updateAvailable()) {
+        if ((e.getPlayer().hasPermission("keepchunks.notify.update")) && Utilities.config.getBoolean("updates.check") && Utilities.config.getBoolean("updates.notify") && Utilities.updateAvailable()) {
             Bukkit.getScheduler().runTaskLaterAsynchronously(Main.plugin, () -> {
                 Utilities.msg(e.getPlayer(), Strings.GAMEPREFIX + "&fA new release of &a" + Strings.PLUGIN + "&f is available!");
                 Utilities.msg(e.getPlayer(), Strings.GAMEPREFIX + "&fCurrent version: &a" + Strings.VERSION + "&f; New version: &a" + Utilities.updateVersion() + "&f.");

@@ -25,8 +25,7 @@ public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
         final String region = args[2];
         final String world = args[3];
         if (Bukkit.getWorld(world) == null) {
-            Utilities.msg(s,
-                    "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+            Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
         } else {
             World realWorld = Bukkit.getWorld(world);
             assert realWorld != null;
@@ -38,10 +37,8 @@ public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
             } else {
                 BlockVector3 max = manager.getRegion(region).getMaximumPoint();
                 BlockVector3 min = manager.getRegion(region).getMinimumPoint();
-                Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(),
-                        max.getBlockZ());
-                Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(),
-                        min.getBlockZ());
+                Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(), max.getBlockZ());
+                Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(), min.getBlockZ());
                 final Chunk chunkMax = maxPoint.getChunk();
                 final Chunk chunkMin = minPoint.getChunk();
                 final int maxPointX = maxPoint.getBlockX();
@@ -54,10 +51,8 @@ public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
                 final int minZ = chunkMin.getZ();
                 Utilities.msg(s, "&2WorldGuard region &f'" + region + "'&2:");
                 Utilities.msg(s, "");
-                Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX
-                        + ", " + maxZ + ")");
-                Utilities.msg(s, "&fCoordinates: &9(" + minPointX + ", " + minPointZ + ") ("
-                        + maxPointX + ", " + maxPointZ + ")");
+                Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")");
+                Utilities.msg(s, "&fCoordinates: &9(" + minPointX + ", " + minPointZ + ") (" + maxPointX + ", " + maxPointZ + ")");
                 Utilities.msg(s, "&fWorld: &c" + world);
             }
         }

@@ -74,16 +74,15 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
                     final int maxX = max(X1, X2);
                     final int maxZ = max(Z1, Z2);
                     final String world = args[6];
+                    Utilities.msg(s, "&fMarking chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
                     for (int x = minX; x <= maxX; ++x) {
                         for (int z = minZ; z <= maxZ; ++z) {
                             final String chunk = x + "#" + z + "#" + world;
                             if (Utilities.chunks.contains(chunk)) {
-                                Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world
-                                        + "'&c is already marked.");
+                                Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c is already marked.");
                             } else {
                                 Utilities.chunks.add(chunk);
-                                Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world
-                                        + "'&f.");
+                                Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
                                 if (Utilities.config.getBoolean("chunkload.dynamic")) {
                                     if (Utilities.config.getBoolean("general.debug")) {
                                         Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
@@ -108,6 +107,7 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
                     Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                     Utilities.saveDataFile();
                     Utilities.reloadDataFile();
+                    Utilities.msg(s, "&fMarked chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
                 } catch (NumberFormatException ex) {
                     Utilities.msg(s, Strings.UNUSABLE);
                 }

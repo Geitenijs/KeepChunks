@@ -34,10 +34,8 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
                 assert player != null;
-                Location maxPoint = new Location(player.getWorld(), max.getBlockX(),
-                        max.getBlockY(), max.getBlockZ());
-                Location minPoint = new Location(player.getWorld(), min.getBlockX(),
-                        min.getBlockY(), min.getBlockZ());
+                Location maxPoint = new Location(player.getWorld(), max.getBlockX(), max.getBlockY(), max.getBlockZ());
+                Location minPoint = new Location(player.getWorld(), min.getBlockX(), min.getBlockY(), min.getBlockZ());
                 final Chunk chunkMax = maxPoint.getChunk();
                 final Chunk chunkMin = minPoint.getChunk();
                 final int maxZ = chunkMax.getZ();
@@ -45,16 +43,15 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
                 final String world = sel.getWorld().getName();
+                Utilities.msg(s, "&fMarking chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
                 for (int x = minX; x <= maxX; ++x) {
                     for (int z = minZ; z <= maxZ; ++z) {
                         final String chunk = x + "#" + z + "#" + world;
                         if (Utilities.chunks.contains(chunk)) {
-                            Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world
-                                    + "'&c is already marked.");
+                            Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c is already marked.");
                         } else {
                             Utilities.chunks.add(chunk);
-                            Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world
-                                    + "'&f.");
+                            Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
                             if (Utilities.config.getBoolean("chunkload.dynamic")) {
                                 if (Utilities.config.getBoolean("general.debug")) {
                                     Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
@@ -79,6 +76,7 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                 Utilities.saveDataFile();
                 Utilities.reloadDataFile();
+                Utilities.msg(s, "&fMarked chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
             } catch (IncompleteRegionException e) {
                 Utilities.msg(s, Strings.WEFIRST);
             }

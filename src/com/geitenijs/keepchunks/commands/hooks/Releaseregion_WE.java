@@ -34,10 +34,8 @@ public class Releaseregion_WE implements CommandExecutor, TabCompleter {
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
                 assert player != null;
-                Location maxPoint = new Location(player.getWorld(), max.getBlockX(),
-                        max.getBlockY(), max.getBlockZ());
-                Location minPoint = new Location(player.getWorld(), min.getBlockX(),
-                        min.getBlockY(), min.getBlockZ());
+                Location maxPoint = new Location(player.getWorld(), max.getBlockX(), max.getBlockY(), max.getBlockZ());
+                Location minPoint = new Location(player.getWorld(), min.getBlockX(), min.getBlockY(), min.getBlockZ());
                 final Chunk chunkMax = maxPoint.getChunk();
                 final Chunk chunkMin = minPoint.getChunk();
                 final int maxZ = chunkMax.getZ();
@@ -45,13 +43,12 @@ public class Releaseregion_WE implements CommandExecutor, TabCompleter {
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
                 final String world = sel.getWorld().getName();
+                Utilities.msg(s, "&fReleasing chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
                 for (int x = minX; x <= maxX; ++x) {
                     for (int z = minZ; z <= maxZ; ++z) {
-                        final String chunk = x + "#" + z + "#"
-                                + world;
+                        final String chunk = x + "#" + z + "#" + world;
                         if (!Utilities.chunks.contains(chunk)) {
-                            Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'"
-                                    + world + "'&c isn't marked.");
+                            Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
                         } else {
                             Utilities.chunks.remove(chunk);
                             if (Main.version.contains("v1_14_R1")) {
@@ -60,14 +57,14 @@ public class Releaseregion_WE implements CommandExecutor, TabCompleter {
                                 } catch (Exception ignored) {
                                 }
                             }
-                            Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z
-                                    + ")&f in world &6'" + world + "'&f.");
+                            Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
                         }
                     }
                 }
                 Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                 Utilities.saveDataFile();
                 Utilities.reloadDataFile();
+                Utilities.msg(s, "&fReleased chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
             } catch (IncompleteRegionException e) {
                 Utilities.msg(s, Strings.WEFIRST);
             }
@@ -94,10 +91,8 @@ public class Releaseregion_WE implements CommandExecutor, TabCompleter {
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
                 assert weplayer != null;
-                Location maxPoint = new Location(weplayer.getWorld(), max.getBlockX(), max.getBlockY(),
-                        max.getBlockZ());
-                Location minPoint = new Location(weplayer.getWorld(), min.getBlockX(), min.getBlockY(),
-                        min.getBlockZ());
+                Location maxPoint = new Location(weplayer.getWorld(), max.getBlockX(), max.getBlockY(), max.getBlockZ());
+                Location minPoint = new Location(weplayer.getWorld(), min.getBlockX(), min.getBlockY(), min.getBlockZ());
                 final Chunk chunkMax = maxPoint.getChunk();
                 final Chunk chunkMin = minPoint.getChunk();
                 final int maxZ = chunkMax.getZ();

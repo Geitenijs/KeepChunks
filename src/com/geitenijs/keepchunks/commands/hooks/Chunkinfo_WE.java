@@ -34,10 +34,8 @@ public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
                 assert player != null;
-                Location maxPoint = new Location(player.getWorld(), max.getBlockX(),
-                        max.getBlockY(), max.getBlockZ());
-                Location minPoint = new Location(player.getWorld(), min.getBlockX(),
-                        min.getBlockY(), min.getBlockZ());
+                Location maxPoint = new Location(player.getWorld(), max.getBlockX(), max.getBlockY(), max.getBlockZ());
+                Location minPoint = new Location(player.getWorld(), min.getBlockX(), min.getBlockY(), min.getBlockZ());
                 final int maxPointX = sel.getMaximumPoint().getBlockX();
                 final int maxPointZ = sel.getMaximumPoint().getBlockZ();
                 final int minPointX = sel.getMinimumPoint().getBlockX();
@@ -51,10 +49,8 @@ public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
                 final String world = sel.getWorld().getName();
                 Utilities.msg(s, "&2Your current WorldEdit selection:");
                 Utilities.msg(s, "");
-                Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX
-                        + ", " + maxZ + ")");
-                Utilities.msg(s, "&fCoordinates: &9(" + minPointX + ", " + minPointZ + ") ("
-                        + maxPointX + ", " + maxPointZ + ")");
+                Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")");
+                Utilities.msg(s, "&fCoordinates: &9(" + minPointX + ", " + minPointZ + ") (" + maxPointX + ", " + maxPointZ + ")");
                 Utilities.msg(s, "&fWorld: &c" + world);
             } catch (IncompleteRegionException e) {
                 Utilities.msg(s, Strings.WEFIRST);
