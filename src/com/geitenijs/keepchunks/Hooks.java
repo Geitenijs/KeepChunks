@@ -39,7 +39,7 @@ public class Hooks {
             }
             return;
         }
-        if (worldEditVersion == 700) {
+        if (worldEditVersion >= 700) {
             WorldEdit = true;
             incompatibleWorldEdit = false;
             if (Utilities.config.getBoolean("general.debug")) {
@@ -76,7 +76,7 @@ public class Hooks {
             }
             return;
         }
-        if (worldGuardVersion == 700) {
+        if (worldGuardVersion >= 700) {
             WorldGuard = true;
             incompatibleWorldGuard = false;
             if (Utilities.config.getBoolean("general.debug")) {
