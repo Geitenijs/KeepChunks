@@ -22,15 +22,15 @@ public class Strings {
             "\n\n";
 
     public static final String NOPERM = Strings.GAMEPREFIX + "&cYou don't have permission to do that.";
+    public static final String UNUSABLE = "&cOne or more values you've entered are unusable.";
+    public static final String ONLYCONSOLE = "&cYou can only do that from the console.";
+    public static final String ONLYPLAYER = "&cYou can only do that as an in-game player.";
+    static final String NOSTAT = "None";
+    public static final String WEFIRST = "&cYou have to select an area with WorldEdit first.";
     public static final String NOWE = "&cThis requires you to have WorldEdit installed.";
     public static final String NOWG = "&cThis requires you to have WorldGuard installed.";
     public static final String UPDATEWE = "&cThis requires you to have WorldEdit version 7.0.0 or newer installed.";
     public static final String UPDATEWG = "&cThis requires you to have WorldGuard version 7.0.0 or newer installed.";
-    static final String NOSTAT = "None";
-    public static final String WEFIRST = "&cYou have to select an area with WorldEdit first.";
-    public static final String UNUSABLE = "&cOne or more values you've entered are unusable.";
-    public static final String ONLYCONSOLE = "&cYou can only do that from the console.";
-    public static final String ONLYPLAYER = "&cYou can only do that as an in-game player.";
 
     static final String DEPENDENCIES_WE_COMPATIBLE = "Found a compatible version of WorldEdit! (7.0.0+)";
     static final String DEPENDENCIES_WE_INCOMPATIBLE = "The required version of WorldEdit for " + Strings.PLUGIN + " v" + Strings.VERSION + " is 7.0.0 or newer.";
