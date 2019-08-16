@@ -24,7 +24,7 @@ public class Strings {
     public static final String NOPERM = Strings.GAMEPREFIX + "&cYou don't have permission to do that.";
     public static final String UNUSABLE = "&cOne or more values you've entered are unusable.";
     public static final String ONLYCONSOLE = "&cYou can only do that from the console.";
-    public static final String ONLYPLAYER = "&cYou can only do that as an in-game player.";
+    public static final String ONLYPLAYER = "&cYou can only do that as an in-game player.d";
     static final String NOSTAT = "None";
     public static final String WEFIRST = "&cYou have to select an area with WorldEdit first.";
     public static final String NOWE = "&cThis requires you to have WorldEdit installed.";
