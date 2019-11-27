@@ -25,13 +25,14 @@ public class Utilities {
     private static File dataFile = new File(Main.plugin.getDataFolder(), "data.yml");
     private static boolean updateAvailable;
     private static String updateVersion;
-    public static HashSet<String> chunks;
+    public static HashSet<String> chunks;	//Storage location for chunks, possibly separate for rails?
     public static HashSet<String> chunkloadAll;
 
     static {
         config = YamlConfiguration.loadConfiguration(new File(Main.plugin.getDataFolder(), "config.yml"));
         data = YamlConfiguration.loadConfiguration(new File(Main.plugin.getDataFolder(), "data.yml"));
         chunks = new HashSet<>(Utilities.data.getStringList("chunks"));
+        railchunks = new HashSet<>(Utilities.data.getStringList("railchunks"));
         chunkloadAll = new HashSet<>();
     }
 
@@ -119,139 +120,162 @@ public class Utilities {
                     consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
                 }
                 try {
-                    Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                    if (Main.version.contains("v1_14_R1")) {
-                        try {
-                            Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                        } catch (NoSuchMethodError ignored) {
-                        }
-                    }
-                } catch (NullPointerException ex) {
-                    if (config.getBoolean("general.debug")) {
-                        consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
-                    }
-                }
-            }
-        }
-    }
+					Main.plugin.getServer().getWorld(world).loadChunk(x, z);
+					if (Main.version.contains("v1_14_R1")) {
+						try {
+							Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+						} catch (NoSuchMethodError ignored) {
+						}
+					}
+				} catch (NullPointerException ex) {
+					if (config.getBoolean("general.debug")) {
+						consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
+					}
+				}
+			}	//Now attempts to load any rail chunks.
+			for (final String chunk : railchunks) {
+				final String[] chunkCoordinates = chunk.split("#");
+				final int x = Integer.parseInt(chunkCoordinates[0]);
+				final int z = Integer.parseInt(chunkCoordinates[1]);
+				final String world = chunkCoordinates[2];
+				if (config.getBoolean("general.debug")) {
+					consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading rail chunk (" + x + "," + z + ") in world '" + world + "'.");
+				}
+				try {
+					Main.plugin.getServer().getWorld(world).loadChunk(x,z);
+					if (Main.version.contains("v1_14_R1")) {
+						try {
+							Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+						} catch (NoSuchMethodError ignored) {
+						}
+					}
+				} catch (NullPointerException ex) {
+					if (config.getBoolean("general.debug")) {
+						consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
+					}
+				}
+			}
 
-    static void startSchedulers() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.plugin, Utilities::checkForUpdates, 190L, 216000L);
-    }
+		}
+	}
 
-    static void stopSchedulers() {
-        Bukkit.getScheduler().cancelTasks(Main.plugin);
-    }
+	static void startSchedulers() {
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.plugin, Utilities::checkForUpdates, 190L, 216000L);
+	}
 
-    static void startMetrics() {
-        Metrics metrics = new Metrics(Main.plugin);
-        metrics.addCustomChart(new Metrics.SingleLineChart("loadedChunks", () -> chunks.size()));
-        metrics.addCustomChart(new Metrics.SimplePie("worldeditVersion", () -> {
-            final Plugin p = Bukkit.getPluginManager().getPlugin("WorldEdit");
-            if (!(p instanceof WorldEditPlugin)) {
-                return Strings.NOSTAT;
-            }
-            return Bukkit.getServer().getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
-        }));
-        metrics.addCustomChart(new Metrics.SimplePie("worldguardVersion", () -> {
-            final Plugin p = Bukkit.getPluginManager().getPlugin("WorldGuard");
-            if (!(p instanceof WorldGuardPlugin)) {
-                return Strings.NOSTAT;
-            }
-            return Bukkit.getServer().getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
-        }));
-        metrics.addCustomChart(new Metrics.SimplePie("debugEnabled", () -> config.getString("general.debug")));
-        metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
-        metrics.addCustomChart(new Metrics.SimplePie("updateCheckEnabled", () -> config.getString("updates.check")));
-        metrics.addCustomChart(new Metrics.SimplePie("updateNotificationEnabled", () -> config.getString("updates.notify")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadDynamicEnabled", () -> config.getString("chunkload.dynamic")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnStartupEnabled", () -> config.getString("chunkload.onstartup")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnWorldloadEnabled", () -> config.getString("chunkload.onworldload")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadAllEnabled", () -> config.getString("chunkload.all")));
-    }
+	static void stopSchedulers() {
+		Bukkit.getScheduler().cancelTasks(Main.plugin);
+	}
 
-    static void done() {
-        consoleMsgPrefixed(Strings.PLUGIN + " v" + Strings.VERSION + " has been enabled");
-    }
+	static void startMetrics() {
+		Metrics metrics = new Metrics(Main.plugin);
+		metrics.addCustomChart(new Metrics.SingleLineChart("loadedChunks", () -> chunks.size()));
+		metrics.addCustomChart(new Metrics.SimplePie("worldeditVersion", () -> {
+					final Plugin p = Bukkit.getPluginManager().getPlugin("WorldEdit");
+					if (!(p instanceof WorldEditPlugin)) {
+					return Strings.NOSTAT;
+					}
+					return Bukkit.getServer().getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
+					}));
+		metrics.addCustomChart(new Metrics.SimplePie("worldguardVersion", () -> {
+					final Plugin p = Bukkit.getPluginManager().getPlugin("WorldGuard");
+					if (!(p instanceof WorldGuardPlugin)) {
+					return Strings.NOSTAT;
+					}
+					return Bukkit.getServer().getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
+					}));
+		metrics.addCustomChart(new Metrics.SimplePie("debugEnabled", () -> config.getString("general.debug")));
+		metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
+		metrics.addCustomChart(new Metrics.SimplePie("updateCheckEnabled", () -> config.getString("updates.check")));
+		metrics.addCustomChart(new Metrics.SimplePie("updateNotificationEnabled", () -> config.getString("updates.notify")));
+		metrics.addCustomChart(new Metrics.SimplePie("chunkloadDynamicEnabled", () -> config.getString("chunkload.dynamic")));
+		metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnStartupEnabled", () -> config.getString("chunkload.onstartup")));
+		metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnWorldloadEnabled", () -> config.getString("chunkload.onworldload")));
+		metrics.addCustomChart(new Metrics.SimplePie("chunkloadAllEnabled", () -> config.getString("chunkload.all")));
+	}
 
-    private static void checkForUpdates() {
-        if (config.getBoolean("updates.check")) {
-            UpdateCheck
-                    .of(Main.plugin)
-                    .resourceId(Strings.RESOURCEID)
-                    .handleResponse((versionResponse, version) -> {
-                        switch (versionResponse) {
-                            case FOUND_NEW:
-                                consoleMsgPrefixed("A new release of " + Strings.PLUGIN + ", v" + version + ", is available! You are still on v" + Strings.VERSION + ".");
-                                consoleMsgPrefixed("To download this update, head over to " + Strings.WEBSITE + "/updates in your browser.");
-                                updateVersion = version;
-                                updateAvailable = true;
-                                break;
-                            case LATEST:
-                                consoleMsgPrefixed("You are running the latest version.");
-                                updateAvailable = false;
-                                break;
-                            case UNAVAILABLE:
-                                consoleMsgPrefixed("An error occurred while checking for updates.");
-                                updateAvailable = false;
-                        }
-                    }).check();
-        }
-    }
+	static void done() {
+		consoleMsgPrefixed(Strings.PLUGIN + " v" + Strings.VERSION + " has been enabled");
+	}
 
-    static boolean updateAvailable() {
-        return updateAvailable;
-    }
+	private static void checkForUpdates() {
+		if (config.getBoolean("updates.check")) {
+			UpdateCheck
+				.of(Main.plugin)
+				.resourceId(Strings.RESOURCEID)
+				.handleResponse((versionResponse, version) -> {
+						switch (versionResponse) {
+						case FOUND_NEW:
+						consoleMsgPrefixed("A new release of " + Strings.PLUGIN + ", v" + version + ", is available! You are still on v" + Strings.VERSION + ".");
+						consoleMsgPrefixed("To download this update, head over to " + Strings.WEBSITE + "/updates in your browser.");
+						updateVersion = version;
+						updateAvailable = true;
+						break;
+						case LATEST:
+						consoleMsgPrefixed("You are running the latest version.");
+						updateAvailable = false;
+						break;
+						case UNAVAILABLE:
+						consoleMsgPrefixed("An error occurred while checking for updates.");
+						updateAvailable = false;
+						}
+						}).check();
+		}
+	}
 
-    static String updateVersion() {
-        return updateVersion;
-    }
+	static boolean updateAvailable() {
+		return updateAvailable;
+	}
 
-    public static void reloadConfigFile() {
-        if (configFile == null) {
-            configFile = new File(Main.plugin.getDataFolder(), "config.yml");
-        }
-        config = YamlConfiguration.loadConfiguration(configFile);
-    }
+	static String updateVersion() {
+		return updateVersion;
+	}
 
-    static void saveConfigFile() {
-        if (config == null || configFile == null) {
-            return;
-        }
-        try {
-            config.save(configFile);
-        } catch (IOException ex) {
-            Main.plugin.getLogger().log(Level.SEVERE, "Could not save " + configFile, ex);
-        }
-    }
+	public static void reloadConfigFile() {
+		if (configFile == null) {
+			configFile = new File(Main.plugin.getDataFolder(), "config.yml");
+		}
+		config = YamlConfiguration.loadConfiguration(configFile);
+	}
 
-    public static void reloadDataFile() {
-        if (dataFile == null) {
-            dataFile = new File(Main.plugin.getDataFolder(), "data.yml");
-        }
-        data = YamlConfiguration.loadConfiguration(dataFile);
-    }
+	static void saveConfigFile() {
+		if (config == null || configFile == null) {
+			return;
+		}
+		try {
+			config.save(configFile);
+		} catch (IOException ex) {
+			Main.plugin.getLogger().log(Level.SEVERE, "Could not save " + configFile, ex);
+		}
+	}
 
-    public static void saveDataFile() {
-        if (data == null || dataFile == null) {
-            return;
-        }
-        try {
-            data.save(dataFile);
-        } catch (IOException ex) {
-            Main.plugin.getLogger().log(Level.SEVERE, "Could not save " + dataFile, ex);
-        }
-    }
+	public static void reloadDataFile() {
+		if (dataFile == null) {
+			dataFile = new File(Main.plugin.getDataFolder(), "data.yml");
+		}
+		data = YamlConfiguration.loadConfiguration(dataFile);
+	}
 
-    public static void msg(final CommandSender s, final String message) {
-        s.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
+	public static void saveDataFile() {
+		if (data == null || dataFile == null) {
+			return;
+		}
+		try {
+			data.save(dataFile);
+		} catch (IOException ex) {
+			Main.plugin.getLogger().log(Level.SEVERE, "Could not save " + dataFile, ex);
+		}
+	}
 
-    private static void consoleMsg(final String message) {
-        Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
+	public static void msg(final CommandSender s, final String message) {
+		s.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+	}
 
-    public static void consoleMsgPrefixed(final String message) {
-        Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', Strings.INTERNALPREFIX + message));
-    }
+	private static void consoleMsg(final String message) {
+		Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+	}
+
+	public static void consoleMsgPrefixed(final String message) {
+		Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', Strings.INTERNALPREFIX + message));
+	}
 }
