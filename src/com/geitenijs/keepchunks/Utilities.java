@@ -26,6 +26,7 @@ public class Utilities {
     private static boolean updateAvailable;
     private static String updateVersion;
     public static HashSet<String> chunks;	//Storage location for chunks, possibly separate for rails?
+    public static HashSet<String> railchunks;	//Storage location for chunks, possibly separate for rails?
     public static HashSet<String> chunkloadAll;
 
     static {

@@ -37,6 +37,7 @@ public class Command_Main implements CommandExecutor, TabCompleter {
         tabs.add("keepchunk");
         tabs.add("keepregion");
         tabs.add("releaseall");
+        tabs.add("releaseallrails");
         tabs.add("releaserail");
         tabs.add("releasechunk");
         tabs.add("releaseregion");

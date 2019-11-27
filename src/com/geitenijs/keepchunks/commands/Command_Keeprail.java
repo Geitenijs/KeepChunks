@@ -30,7 +30,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
 						final int x = currentChunk.getX();
 						final int z = currentChunk.getZ();
 						Utilities.chunks.add(chunk);
-						Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
+						Utilities.data.set("railchunks", new ArrayList<>(Utilities.railchunks));
 						Utilities.saveDataFile();
 						Utilities.reloadDataFile();
 						if (Utilities.config.getBoolean("chunkload.dynamic")) {

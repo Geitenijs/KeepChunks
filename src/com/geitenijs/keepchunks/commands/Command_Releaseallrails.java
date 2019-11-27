@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Command_Releaseall implements CommandExecutor, TabCompleter {
+public class Command_Releaseallrails implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
         if (args.length == 1) {
@@ -22,7 +22,7 @@ public class Command_Releaseall implements CommandExecutor, TabCompleter {
                     return true;
                 }
             }
-            for (final String chunk : Utilities.chunks) {
+            for (final String chunk : Utilities.railchunks) {
                 final String[] chunkCoordinates = chunk.split("#");
                 final int x = Integer.parseInt(chunkCoordinates[0]);
                 final int z = Integer.parseInt(chunkCoordinates[1]);
@@ -34,8 +34,8 @@ public class Command_Releaseall implements CommandExecutor, TabCompleter {
                     }
                 }
             }
-            Utilities.chunks.clear();
-            Utilities.data.set("chunks", new ArrayList<>());
+            Utilities.railchunks.clear();
+            Utilities.data.set("railchunks", new ArrayList<>());
             Utilities.saveDataFile();
             Utilities.reloadDataFile();
             Utilities.msg(s, "&aAll marked chunks have been released.");
