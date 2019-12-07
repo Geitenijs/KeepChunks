@@ -29,9 +29,6 @@ public class Command_List implements CommandExecutor, TabCompleter {
                 Utilities.msg(s, "&7---");
                 Utilities.msg(s, "&aA total of &f" + Utilities.chunks.size() + "&a chunks are currently marked.");
             }
-            if (Utilities.config.getBoolean("chunkload.all")) {
-                Utilities.msg(s, "&a&oA total of &f&o" + Utilities.chunkloadAll.size() + "&a&o chunks are currently loaded (all).");
-            }
         } else {
             Utilities.msg(s, Strings.LISTUSAGE);
         }

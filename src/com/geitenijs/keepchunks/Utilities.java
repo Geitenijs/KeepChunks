@@ -71,8 +71,7 @@ public class Utilities {
                 + "\nchunkload:"
                 + "\n  dynamic: Enable to automatically load newly marked chunks."
                 + "\n  onstartup: Enable to load all marked chunks on server startup."
-                + "\n  onworldload: Enable to load all marked chunks in a world, once the world is loaded in memory."
-                + "\n  all: Do you want to prevent all chunks from unloading, until you reload the plugin/restart your server? Warning: This may cause a lot of lag when not regularly reloading " + Strings.PLUGIN + "! (not working properly on 1.14)");
+                + "\n  onworldload: Enable to load all marked chunks in a world, once the world is loaded in memory.");
         config.addDefault("general.debug", false);
         config.addDefault("general.releaseallprotection", true);
         config.addDefault("updates.check", true);
@@ -80,7 +79,7 @@ public class Utilities {
         config.addDefault("chunkload.dynamic", true);
         config.addDefault("chunkload.onstartup", true);
         config.addDefault("chunkload.onworldload", true);
-        config.addDefault("chunkload.all", false);
+        config.set("chunkload.all", null);
         config.set("chunkload.force", null);
         data.options().header(Strings.ASCIILOGO
                 + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
@@ -122,8 +121,8 @@ public class Utilities {
                     Main.plugin.getServer().getWorld(world).loadChunk(x, z);
                     if (Main.version.contains("v1_14_R1")) {
                         try {
-                            Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                        } catch (NoSuchMethodError ignored) {
+                            Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                        } catch (Exception ignored) {
                         }
                     }
                 } catch (NullPointerException ex) {
@@ -167,7 +166,6 @@ public class Utilities {
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadDynamicEnabled", () -> config.getString("chunkload.dynamic")));
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnStartupEnabled", () -> config.getString("chunkload.onstartup")));
         metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnWorldloadEnabled", () -> config.getString("chunkload.onworldload")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadAllEnabled", () -> config.getString("chunkload.all")));
     }
 
     static void done() {

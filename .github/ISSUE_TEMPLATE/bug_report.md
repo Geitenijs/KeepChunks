@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 **Environment (please complete the following information):**
  - OS: [e.g. Linux]
  - Server Software [e.g. Spigot, Paper]
- - Server Version [e.g. 1.13.2]
+ - Server Version [e.g. 1.14.4]
  - WorldEdit Version (if applicable) [e.g. 7.0.0-SNAPSHOT;1234-567a89b]
  - WorldGuard Version (if applicable) [e.g. 7.0.0-SNAPSHOT;1234-567a89b]
  - Full list of plugins
