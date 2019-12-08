@@ -52,7 +52,7 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                     Utilities.msg(s, "&fChunk coords: &6(" + x + ", " + z + ")");
                     Utilities.msg(s, "&fCoordinates: &9(" + playerX + ", " + playerZ + ")");
                     Utilities.msg(s, "&fWorld: &c" + world);
-                    if (Utilities.chunks.contains(chunk)) {
+                    if (Utilities.chunks.contains(chunk) || Utilities.railchunks.contains(chunk)) {
                         Utilities.msg(s, "&fMarked by KC: &2Yes");
                     } else {
                         Utilities.msg(s, "&fMarked by KC: &4No");
@@ -99,7 +99,7 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                     Utilities.msg(s, "");
                     Utilities.msg(s, "&fChunk coords: &6(" + x + ", " + z + ")");
                     Utilities.msg(s, "&fWorld: &c" + world);
-                    if (Utilities.chunks.contains(chunk)) {
+                    if (Utilities.chunks.contains(chunk) || Utilities.railchunks.contains(chunk)) {
                         Utilities.msg(s, "&fMarked by KC: &2Yes");
                     } else {
                         Utilities.msg(s, "&fMarked by KC: &4No");

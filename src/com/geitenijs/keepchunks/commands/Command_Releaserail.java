@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Command_Releasechunk implements CommandExecutor, TabCompleter {
+public class Command_Releaserail implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
         if (args.length == 2) {
@@ -44,7 +44,7 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                     Utilities.msg(s, Strings.ONLYPLAYER);
                 }
             } else {
-                Utilities.msg(s, Strings.RELEASECHUNKUSAGE);
+                Utilities.msg(s, Strings.RELEASERAILUSAGE);
             }
 
         } else if (args.length == 5) {

@@ -40,7 +40,7 @@ public class Command_Releaseallrails implements CommandExecutor, TabCompleter {
             Utilities.reloadDataFile();
             Utilities.msg(s, "&aAll marked chunks have been released.");
         } else {
-            Utilities.msg(s, Strings.RELEASEALLUSAGE);
+            Utilities.msg(s, Strings.RELEASEALLRAILSUSAGE);
         }
         return true;
     }

@@ -49,6 +49,7 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
 		ListCommand = new Command_List();
 		ChunkinfoCommand = new Command_Chunkinfo();
 		KeepchunkCommand = new Command_Keepchunk();
+		KeeprailCommand = new Command_Keeprail();
 		KeepregionCommand = new Command_Keepregion();
 		ReleaseallCommand = new Command_Releaseall();
 		ReleaseallrailsCommand = new Command_Releaseallrails();
@@ -62,6 +63,7 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
 		ListTab = new Command_List();
 		ChunkinfoTab = new Command_Chunkinfo();
 		KeepchunkTab = new Command_Keepchunk();
+		KeeprailTab = new Command_Keeprail();
 		KeepregionTab = new Command_Keepregion();
 		ReleaseallTab = new Command_Releaseall();
 		ReleaseallrailsTab = new Command_Releaseallrails();
