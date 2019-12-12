@@ -24,7 +24,7 @@ public class Events implements Listener {
                 + currentChunk.getWorld().getName();
         if (new HashSet<>(Utilities.chunks).contains(chunk)) {
             try {
-                e.setCancelled(true);       //Event cancelling no longer an option with 1.14+. Need to update to setForceLoaded()/chunk plugin ticket...
+                e.setCancelled(true);
             } catch (NoSuchMethodError ignored) {
             }
         }

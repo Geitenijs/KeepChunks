@@ -38,7 +38,7 @@ public class Command_Releaseallrails implements CommandExecutor, TabCompleter {
             Utilities.data.set("railchunks", new ArrayList<>());
             Utilities.saveDataFile();
             Utilities.reloadDataFile();
-            Utilities.msg(s, "&aAll marked chunks have been released.");
+            Utilities.msg(s, "&aAll marked rail chunks have been released.");
         } else {
             Utilities.msg(s, Strings.RELEASEALLRAILSUSAGE);
         }

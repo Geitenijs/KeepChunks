@@ -98,7 +98,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
 				boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
 
 				if (isRail && !history.contains(candidate)) {	//If the candidate block is a rail and has not been visited before
-					if (!candidate.getChunk().isForceLoaded()) { //TODO: See if spawn chunks break this check, as they should be force loaded by default?
+					if (!candidate.getChunk().isForceLoaded()) {
 						updateData(candidate.getChunk()); //Load the chunk and the 8 chunk perimeter, and update data files.
 						Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + pos.getX() + "," + pos.getZ() + ") in world '" + pos.getWorld() + "'.");
 					}
@@ -115,6 +115,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
 				if (isRail && !history.contains(candidate)) {
 					if (!candidate.getChunk().isForceLoaded()) {
 						updateData(candidate.getChunk()); //Load the chunks and the 8 chunk perimeter, and update data files.
+						Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + pos.getX() + "," + pos.getZ() + ") in world '" + pos.getWorld() + "'.");
 					}
 					todo.add(candidate);
 				}
@@ -129,6 +130,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
 				if (isRail && !history.contains(candidate)) {
 					if (!candidate.getChunk().isForceLoaded()) {
 						updateData(candidate.getChunk()); //Load the chunks and the 8 chunk perimeter, and update data files.
+						Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + pos.getX() + "," + pos.getZ() + ") in world '" + pos.getWorld() + "'.");
 					}
 					todo.add(candidate);
 				}
@@ -143,6 +145,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
 				if (isRail && !history.contains(candidate)) {
 					if (!candidate.getChunk().isForceLoaded()) {
 						updateData(candidate.getChunk()); //Load the chunks and the 8 chunk perimeter, and update data files.
+						Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + pos.getX() + "," + pos.getZ() + ") in world '" + pos.getWorld() + "'.");
 					}
 					todo.add(candidate);
 				}
@@ -205,7 +208,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
 						tabs.add(String.valueOf(loc.getChunk().getX()));
 					}
 					if (newArgs.length == 3) {
-						tabs.add(String.valueOf((int)loc.getY()));
+						tabs.add(String.valueOf(loc.getY()));
 					}
 					if (newArgs.length == 4) {
 						tabs.add(String.valueOf(loc.getChunk().getZ()));

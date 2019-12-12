@@ -89,6 +89,7 @@ public class Utilities {
                 "\nInformation & Support: " + Strings.WEBSITE
                 + "\n\nUnless you know what you're doing, it's best not to touch this file. All configurable options can be found in config.yml");
         data.addDefault("chunks", new ArrayList<>());
+        data.addDefault("railchunks", new ArrayList<>());
         config.options().copyHeader(true);
         config.options().copyDefaults(true);
         data.options().copyHeader(true);

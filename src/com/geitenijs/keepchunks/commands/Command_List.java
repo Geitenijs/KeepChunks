@@ -27,7 +27,7 @@ public class Command_List implements CommandExecutor, TabCompleter {
                     Utilities.msg(s, "&fChunk &9(" + x + "," + z + ") &fin world &6'" + world + "'&f.");
                 }
                 Utilities.msg(s, "&7---");
-                Utilities.msg(s, "&aA total of &f" + Utilities.railchunks.size() + "&a chunks are currently marked.");
+                Utilities.msg(s, "&aA total of &f" + Utilities.railchunks.size() + "&a rail chunks are currently marked.");
             }
             if (Utilities.chunks.isEmpty()) {
                 Utilities.msg(s, "&cThere are currently no marked chunks.");
