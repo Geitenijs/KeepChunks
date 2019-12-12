@@ -12,134 +12,132 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CommandWrapper implements CommandExecutor, TabCompleter {
-	private CommandExecutor MainCommand;
-	private CommandExecutor HelpCommand;
-	private CommandExecutor ReloadCommand;
-	private CommandExecutor ListCommand;
-	private CommandExecutor ChunkinfoCommand;
+    private CommandExecutor MainCommand;
+    private CommandExecutor HelpCommand;
+    private CommandExecutor ReloadCommand;
+    private CommandExecutor ListCommand;
+    private CommandExecutor ChunkinfoCommand;
+    private CommandExecutor KeepchunkCommand;
+    private CommandExecutor KeeprailCommand;
+    private CommandExecutor KeepregionCommand;
+    private CommandExecutor ReleaseallCommand;
+    private CommandExecutor ReleaseallrailsCommand;
+    private CommandExecutor ReleasechunkCommand;
+    private CommandExecutor ReleaserailCommand;
+    private CommandExecutor ReleaseregionCommand;
+    private TabCompleter MainTab;
+    private TabCompleter HelpTab;
+    private TabCompleter ReloadTab;
+    private TabCompleter ListTab;
+    private TabCompleter ChunkinfoTab;
+    private TabCompleter KeepchunkTab;
+    private TabCompleter KeeprailTab;
+    private TabCompleter KeepregionTab;
+    private TabCompleter ReleaseallTab;
+    private TabCompleter ReleaseallrailsTab;
+    private TabCompleter ReleasechunkTab;
+    private TabCompleter ReleaserailTab;
+    private TabCompleter ReleaseregionTab;
 
-	private CommandExecutor KeeprailCommand;
-	private CommandExecutor KeepchunkCommand;
-	private CommandExecutor KeepregionCommand;
+    public CommandWrapper() {
+        MainCommand = new Command_Main();
+        HelpCommand = new Command_Help();
+        ReloadCommand = new Command_Reload();
+        ListCommand = new Command_List();
+        ChunkinfoCommand = new Command_Chunkinfo();
+        KeepchunkCommand = new Command_Keepchunk();
+        KeeprailCommand = new Command_Keeprail();
+        KeepregionCommand = new Command_Keepregion();
+        ReleaseallCommand = new Command_Releaseall();
+        ReleaseallrailsCommand = new Command_Releaseallrails();
+        ReleasechunkCommand = new Command_Releasechunk();
+        ReleaserailCommand = new Command_Releaserail();
+        ReleaseregionCommand = new Command_Releaseregion();
+        MainTab = new Command_Main();
+        HelpTab = new Command_Help();
+        ReloadTab = new Command_Reload();
+        ListTab = new Command_List();
+        ChunkinfoTab = new Command_Chunkinfo();
+        KeepchunkTab = new Command_Keepchunk();
+        KeeprailTab = new Command_Keeprail();
+        KeepregionTab = new Command_Keepregion();
+        ReleaseallTab = new Command_Releaseall();
+        ReleaseallrailsTab = new Command_Releaseallrails();
+        ReleasechunkTab = new Command_Releasechunk();
+        ReleaserailTab = new Command_Releaserail();
+        ReleaseregionTab = new Command_Releaseregion();
+    }
 
-	private CommandExecutor ReleaseallCommand;
-	private CommandExecutor ReleaseallrailsCommand;
-	private CommandExecutor ReleaserailCommand;
-	private CommandExecutor ReleasechunkCommand;
-	private CommandExecutor ReleaseregionCommand;
+    public static ArrayList<String> filterTabs(ArrayList<String> list, String[] origArgs) {
+        if (origArgs.length == 0)
+            return list;
+        Iterator<String> itel = list.iterator();
+        String label = origArgs[origArgs.length - 1].toLowerCase();
+        while (itel.hasNext()) {
+            String name = itel.next();
+            if (name.toLowerCase().startsWith(label))
+                continue;
+            itel.remove();
+        }
+        return list;
+    }
 
-	private TabCompleter MainTab;
-	private TabCompleter HelpTab;
-	private TabCompleter ReloadTab;
-	private TabCompleter ListTab;
-	private TabCompleter ChunkinfoTab;
-	private TabCompleter KeepchunkTab;
-	private TabCompleter KeeprailTab;
-	private TabCompleter KeepregionTab;
-	private TabCompleter ReleaseallTab;
-	private TabCompleter ReleaseallrailsTab;
-	private TabCompleter ReleaserailTab;
-	private TabCompleter ReleasechunkTab;
-	private TabCompleter ReleaseregionTab;
+    public static String[] getArgs(String[] args) {
+        ArrayList<String> newArgs = new ArrayList<>();
+        for (int i = 0; i < args.length - 1; i++) {
+            String s = args[i];
+            if (s.trim().isEmpty())
+                continue;
+            newArgs.add(s);
+        }
+        return newArgs.toArray(new String[0]);
+    }
 
-	public CommandWrapper() {
-		MainCommand = new Command_Main();
-		HelpCommand = new Command_Help();
-		ReloadCommand = new Command_Reload();
-		ListCommand = new Command_List();
-		ChunkinfoCommand = new Command_Chunkinfo();
-		KeepchunkCommand = new Command_Keepchunk();
-		KeeprailCommand = new Command_Keeprail();
-		KeepregionCommand = new Command_Keepregion();
-		ReleaseallCommand = new Command_Releaseall();
-		ReleaseallrailsCommand = new Command_Releaseallrails();
-		ReleaserailCommand = new Command_Releaserail();
-		ReleasechunkCommand = new Command_Releasechunk();
-		ReleaseregionCommand = new Command_Releaseregion();
-
-		MainTab = new Command_Main();
-		HelpTab = new Command_Help();
-		ReloadTab = new Command_Reload();
-		ListTab = new Command_List();
-		ChunkinfoTab = new Command_Chunkinfo();
-		KeepchunkTab = new Command_Keepchunk();
-		KeeprailTab = new Command_Keeprail();
-		KeepregionTab = new Command_Keepregion();
-		ReleaseallTab = new Command_Releaseall();
-		ReleaseallrailsTab = new Command_Releaseallrails();
-		ReleaserailTab = new Command_Releaserail();
-		ReleasechunkTab = new Command_Releasechunk();
-		ReleaseregionTab = new Command_Releaseregion();
-	}
-
-	public static ArrayList<String> filterTabs(ArrayList<String> list, String[] origArgs) {
-		if (origArgs.length == 0)
-			return list;
-		Iterator<String> itel = list.iterator();
-		String label = origArgs[origArgs.length - 1].toLowerCase();
-		while (itel.hasNext()) {
-			String name = itel.next();
-			if (name.toLowerCase().startsWith(label))
-				continue;
-			itel.remove();
-		}
-		return list;
-	}
-
-	public static String[] getArgs(String[] args) {
-		ArrayList<String> newArgs = new ArrayList<>();
-		for (int i = 0; i < args.length - 1; i++) {
-			String s = args[i];
-			if (s.trim().isEmpty())
-				continue;
-			newArgs.add(s);
-		}
-		return newArgs.toArray(new String[0]);
-	}
-
-	public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-		if (c.getName().equalsIgnoreCase("keepchunks") || c.getName().equalsIgnoreCase("kc")) {
-			if (args.length == 0) {
-				return MainCommand.onCommand(s, c, label, args);
-			} else if (args[0].equalsIgnoreCase("help")) {
-				if (s.hasPermission("keepchunks.help")) {
-					return HelpCommand.onCommand(s, c, label, args);
-				} else {
-					Utilities.msg(s, Strings.NOPERM);
-				}
-			} else if (args[0].equalsIgnoreCase("reload")) {
-				if (s.hasPermission("keepchunks.reload")) {
-					return ReloadCommand.onCommand(s, c, label, args);
-				} else {
-					Utilities.msg(s, Strings.NOPERM);
-				}
-			} else if (args[0].equalsIgnoreCase("list")) {
-				if (s.hasPermission("keepchunks.list")) {
-					return ListCommand.onCommand(s, c, label, args);
-				} else {
-					Utilities.msg(s, Strings.NOPERM);
-				}
-			} else if (args[0].equalsIgnoreCase("chunkinfo")) {
-				if (s.hasPermission("keepchunks.chunkinfo")) {
-					return ChunkinfoCommand.onCommand(s, c, label, args);
-				} else {
-					Utilities.msg(s, Strings.NOPERM);
-				}
-			} else if (args[0].equalsIgnoreCase("keepchunk")) {
-				if (s.hasPermission("keepchunks.keepchunk")) {
-					return KeepchunkCommand.onCommand(s, c, label, args);
-				} else {
-					Utilities.msg(s, Strings.NOPERM);
-				}
-			} else if (args[0].equalsIgnoreCase("keepregion")) {
-				if (s.hasPermission("keepchunks.keepregion")) {
-					return KeepregionCommand.onCommand(s, c, label, args);
-				} else {
-					Utilities.msg(s, Strings.NOPERM);
-				}
-			}	else if (args[0].equalsIgnoreCase("keeprail")) {
+    public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
+        if (c.getName().equalsIgnoreCase("keepchunks") || c.getName().equalsIgnoreCase("kc")) {
+            if (args.length == 0) {
+                return MainCommand.onCommand(s, c, label, args);
+            } else if (args[0].equalsIgnoreCase("help")) {
+                if (s.hasPermission("keepchunks.help")) {
+                    return HelpCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("reload")) {
+                if (s.hasPermission("keepchunks.reload")) {
+                    return ReloadCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("list")) {
+                if (s.hasPermission("keepchunks.list")) {
+                    return ListCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("chunkinfo")) {
+                if (s.hasPermission("keepchunks.chunkinfo")) {
+                    return ChunkinfoCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("keepchunk")) {
+                if (s.hasPermission("keepchunks.keepchunk")) {
+                    return KeepchunkCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+			} 
+			else if (args[0].equalsIgnoreCase("keeprail")) {
 				if (s.hasPermission("keepchunks.keeprail")) {
 					return KeeprailCommand.onCommand(s, c, label, args);
+				} else {
+					Utilities.msg(s, Strings.NOPERM);
+				}
+			} 
+			else if (args[0].equalsIgnoreCase("keepregion")) {
+				if (s.hasPermission("keepchunks.keepregion")) {
+					return KeepregionCommand.onCommand(s, c, label, args);
 				} else {
 					Utilities.msg(s, Strings.NOPERM);
 				}
@@ -156,25 +154,28 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
 				} else {
 					Utilities.msg(s, Strings.NOPERM);
 				}
-			} else if (args[0].equalsIgnoreCase("releasechunk")) {
+			}
+			else if (args[0].equalsIgnoreCase("releasechunk")) {
 				if (s.hasPermission("keepchunks.releasechunk")) {
 					return ReleasechunkCommand.onCommand(s, c, label, args);
 				} else {
 					Utilities.msg(s, Strings.NOPERM);
 				}
-			} else if (args[0].equalsIgnoreCase("releaseregion")) {
-				if (s.hasPermission("keepchunks.releaseregion")) {
-					return ReleaseregionCommand.onCommand(s, c, label, args);
-				} else {
-					Utilities.msg(s, Strings.NOPERM);
-				}
-			} else if (args[0].equalsIgnoreCase("releaserail")) {
+			} 
+			else if (args[0].equalsIgnoreCase("releaserail")) {
 				if (s.hasPermission("keepchunks.releaserail")) {
 					return ReleaserailCommand.onCommand(s, c, label, args);
 				} else {
 					Utilities.msg(s, Strings.NOPERM);
 				}
-			}else {
+			}
+			else if (args[0].equalsIgnoreCase("releaseregion")) {
+				if (s.hasPermission("keepchunks.releaseregion")) {
+					return ReleaseregionCommand.onCommand(s, c, label, args);
+				} else {
+					Utilities.msg(s, Strings.NOPERM);
+				}
+			} else {
 				Utilities.msg(s, Strings.GAMEPREFIX + "&cThat command does not exist.");
 			}
 		}

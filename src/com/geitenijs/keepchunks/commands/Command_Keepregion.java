@@ -89,12 +89,7 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
                                     }
                                     try {
                                         Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                        if (Main.version.contains("v1_14_R1")) {
-                                            try {
-                                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                                            } catch (NoSuchMethodError ignored) {
-                                            }
-                                        }
+                                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
                                     } catch (NullPointerException ex) {
                                         if (Utilities.config.getBoolean("general.debug")) {
                                             Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");

@@ -53,12 +53,7 @@ public class Releaseregion_WG implements CommandExecutor, TabCompleter {
                             Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
                         } else {
                             Utilities.chunks.remove(chunk);
-                            if (Main.version.contains("v1_14_R1")) {
-                                try {
-                                    Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
-                                } catch (Exception ignored) {
-                                }
-                            }
+                            Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                             Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
                         }
                     }

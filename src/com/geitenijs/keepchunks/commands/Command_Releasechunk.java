@@ -29,12 +29,7 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                         final int x = currentChunk.getX();
                         final int z = currentChunk.getZ();
                         Utilities.chunks.remove(chunk);
-                        if (Main.version.contains("v1_14_R1")) {
-                            try {
-                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
-                            } catch (Exception ignored) {
-                            }
-                        }
+                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                         Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();
@@ -58,12 +53,7 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                         Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
                     } else {
                         Utilities.chunks.remove(chunk);
-                        if (Main.version.contains("v1_14_R1")) {
-                            try {
-                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
-                            } catch (Exception ignored) {
-                            }
-                        }
+                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                         Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();

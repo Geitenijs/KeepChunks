@@ -27,12 +27,7 @@ public class Command_Releaseall implements CommandExecutor, TabCompleter {
                 final int x = Integer.parseInt(chunkCoordinates[0]);
                 final int z = Integer.parseInt(chunkCoordinates[1]);
                 final String world = chunkCoordinates[2];
-                if (Main.version.contains("v1_14_R1")) {
-                    try {
-                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
-                    } catch (Exception ignored) {
-                    }
-                }
+                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
             }
             Utilities.chunks.clear();
             Utilities.data.set("chunks", new ArrayList<>());

@@ -23,18 +23,7 @@ public class Events implements Listener {
         final String chunk = currentChunk.getX() + "#" + currentChunk.getZ() + "#"
                 + currentChunk.getWorld().getName();
         if (new HashSet<>(Utilities.chunks).contains(chunk)) {
-            try {
-                e.setCancelled(true);
-            } catch (NoSuchMethodError ignored) {
-            }
-        }
-        if (Utilities.config.getBoolean("chunkload.all")) {
-            if (new HashSet<>(Utilities.chunkloadAll).contains(chunk)) {
-                try {
-                    e.setCancelled(true);
-                } catch (NoSuchMethodError ignored) {
-                }
-            }
+            Utilities.consoleMsgPrefixed("Chunk (" + currentChunk.getX() + "," + currentChunk.getZ() + ") in world '" + currentChunk.getWorld().getName() + "' is unloading, while it should be force-loaded.");
         }
     }
 
@@ -45,26 +34,8 @@ public class Events implements Listener {
             final String world = chunk.split("#")[2];
             worlds.add(world.toLowerCase());
         }
-        if (Utilities.config.getBoolean("chunkload.all")) {
-            for (final String chunk : Utilities.chunkloadAll) {
-                final String world = chunk.split("#")[2];
-                worlds.add(world.toLowerCase());
-            }
-        }
         if (worlds.contains(e.getWorld().getName().toLowerCase())) {
             e.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onChunkLoad(ChunkLoadEvent e) {
-        if (Utilities.config.getBoolean("chunkload.all")) {
-            final Chunk currentChunk = e.getChunk();
-            final String chunk = currentChunk.getX() + "#"
-                    + currentChunk.getZ() + "#" + currentChunk.getWorld().getName();
-            if (!Utilities.chunks.contains(chunk)) {
-                Utilities.chunkloadAll.add(chunk);
-            }
         }
     }
 

@@ -25,9 +25,9 @@ permissions:
     default: op
   keepchunks.chunkinfo:
     default: op
-  keepchunks.keeprail:
-    default: op
   keepchunks.keepchunk:
+    default: op
+  keepchunks.keeprail:
     default: op
   keepchunks.keepregion:
     default: op
@@ -35,9 +35,9 @@ permissions:
     default: op
   keepchunks.releaseallrails:
     default: op
-  keepchunks.releaserail:
-    default: op
   keepchunks.releasechunk:
+    default: op
+  keepchunks.releaserail:
     default: op
   keepchunks.releaseregion:
     default: op
