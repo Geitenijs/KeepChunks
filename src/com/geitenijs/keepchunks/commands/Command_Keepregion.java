@@ -6,6 +6,7 @@ import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.hooks.Keepregion_WE;
 import com.geitenijs.keepchunks.commands.hooks.Keepregion_WG;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -74,35 +75,32 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
                     final int maxX = max(X1, X2);
                     final int maxZ = max(Z1, Z2);
                     final String world = args[6];
-                    Utilities.msg(s, "&fMarking chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
+                    if (Bukkit.getWorld(world) == null) {
+                        Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+                        return false;
+                    }
+                    Utilities.msg(s, "&fMarking chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
                     for (int x = minX; x <= maxX; ++x) {
                         for (int z = minZ; z <= maxZ; ++z) {
                             final String chunk = x + "#" + z + "#" + world;
-                            if (Utilities.chunks.contains(chunk)) {
-                                Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c is already marked.");
-                            } else {
-                                Utilities.chunks.add(chunk);
-                                Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
-                                if (Utilities.config.getBoolean("chunkload.dynamic")) {
-                                    if (Utilities.config.getBoolean("general.debug")) {
-                                        Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
-                                    }
-                                    try {
-                                        Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                                    } catch (NullPointerException ex) {
-                                        if (Utilities.config.getBoolean("general.debug")) {
-                                            Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
-                                        }
-                                    }
+                            if (Utilities.chunks.contains(chunk) && Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                                if (Utilities.config.getBoolean("general.debug")) {
+                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' is already marked.");
                                 }
+                            } else {
+                                if (Utilities.config.getBoolean("general.debug")) {
+                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
+                                }
+                                Utilities.chunks.add(chunk);
+                                Main.plugin.getServer().getWorld(world).loadChunk(x, z);
+                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
                             }
                         }
                     }
                     Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                     Utilities.saveDataFile();
                     Utilities.reloadDataFile();
-                    Utilities.msg(s, "&fMarked chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
+                    Utilities.msg(s, "&fMarked chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
                 } catch (NumberFormatException ex) {
                     Utilities.msg(s, Strings.UNUSABLE);
                 }

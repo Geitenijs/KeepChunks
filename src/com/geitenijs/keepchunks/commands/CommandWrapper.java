@@ -19,9 +19,11 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
     private CommandExecutor ChunkinfoCommand;
     private CommandExecutor KeepchunkCommand;
     private CommandExecutor KeepregionCommand;
+    private CommandExecutor KeeprailCommand;
     private CommandExecutor ReleaseallCommand;
     private CommandExecutor ReleasechunkCommand;
     private CommandExecutor ReleaseregionCommand;
+    private CommandExecutor ReleaserailCommand;
     private TabCompleter MainTab;
     private TabCompleter HelpTab;
     private TabCompleter ReloadTab;
@@ -29,9 +31,11 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
     private TabCompleter ChunkinfoTab;
     private TabCompleter KeepchunkTab;
     private TabCompleter KeepregionTab;
+    private TabCompleter KeeprailTab;
     private TabCompleter ReleaseallTab;
     private TabCompleter ReleasechunkTab;
     private TabCompleter ReleaseregionTab;
+    private TabCompleter ReleaserailTab;
 
     public CommandWrapper() {
         MainCommand = new Command_Main();
@@ -41,9 +45,11 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
         ChunkinfoCommand = new Command_Chunkinfo();
         KeepchunkCommand = new Command_Keepchunk();
         KeepregionCommand = new Command_Keepregion();
+        KeeprailCommand = new Command_Keeprail();
         ReleaseallCommand = new Command_Releaseall();
         ReleasechunkCommand = new Command_Releasechunk();
         ReleaseregionCommand = new Command_Releaseregion();
+        ReleaserailCommand = new Command_Releaserail();
         MainTab = new Command_Main();
         HelpTab = new Command_Help();
         ReloadTab = new Command_Reload();
@@ -51,9 +57,11 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
         ChunkinfoTab = new Command_Chunkinfo();
         KeepchunkTab = new Command_Keepchunk();
         KeepregionTab = new Command_Keepregion();
+        KeeprailTab = new Command_Keeprail();
         ReleaseallTab = new Command_Releaseall();
         ReleasechunkTab = new Command_Releasechunk();
         ReleaseregionTab = new Command_Releaseregion();
+        ReleaserailTab = new Command_Releaserail();
     }
 
     public static ArrayList<String> filterTabs(ArrayList<String> list, String[] origArgs) {
@@ -121,6 +129,12 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
                 } else {
                     Utilities.msg(s, Strings.NOPERM);
                 }
+            } else if (args[0].equalsIgnoreCase("keeprail")) {
+                if (s.hasPermission("keepchunks.keeprail")) {
+                    return KeeprailCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
             } else if (args[0].equalsIgnoreCase("releaseall")) {
                 if (s.hasPermission("keepchunks.releaseall")) {
                     return ReleaseallCommand.onCommand(s, c, label, args);
@@ -136,6 +150,12 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
             } else if (args[0].equalsIgnoreCase("releaseregion")) {
                 if (s.hasPermission("keepchunks.releaseregion")) {
                     return ReleaseregionCommand.onCommand(s, c, label, args);
+                } else {
+                    Utilities.msg(s, Strings.NOPERM);
+                }
+            } else if (args[0].equalsIgnoreCase("releaserail")) {
+                if (s.hasPermission("keepchunks.releaserail")) {
+                    return ReleaserailCommand.onCommand(s, c, label, args);
                 } else {
                     Utilities.msg(s, Strings.NOPERM);
                 }
@@ -176,6 +196,10 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
                 if (s.hasPermission("keepchunks.keepregion")) {
                     return KeepregionTab.onTabComplete(s, c, label, args);
                 }
+            } else if (args[0].equalsIgnoreCase("keeprail")) {
+                if (s.hasPermission("keepchunks.keeprail")) {
+                    return KeeprailTab.onTabComplete(s, c, label, args);
+                }
             } else if (args[0].equalsIgnoreCase("releaseall")) {
                 if (s.hasPermission("keepchunks.releaseall")) {
                     return ReleaseallTab.onTabComplete(s, c, label, args);
@@ -187,6 +211,10 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
             } else if (args[0].equalsIgnoreCase("releaseregion")) {
                 if (s.hasPermission("keepchunks.releaseregion")) {
                     return ReleaseregionTab.onTabComplete(s, c, label, args);
+                }
+            } else if (args[0].equalsIgnoreCase("releaserail")) {
+                if (s.hasPermission("keepchunks.releaserail")) {
+                    return ReleaserailTab.onTabComplete(s, c, label, args);
                 }
             }
         }

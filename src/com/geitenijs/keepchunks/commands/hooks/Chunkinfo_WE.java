@@ -47,11 +47,11 @@ public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
                 final String world = sel.getWorld().getName();
-                Utilities.msg(s, "&2Your current WorldEdit selection:");
-                Utilities.msg(s, "");
-                Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")");
-                Utilities.msg(s, "&fCoordinates: &9(" + minPointX + ", " + minPointZ + ") (" + maxPointX + ", " + maxPointZ + ")");
-                Utilities.msg(s, "&fWorld: &c" + world);
+                Utilities.msg(s, "&7---");
+                Utilities.msg(s, "&fWorldEdit selection: &c(" + minPointX + ", " + minPointZ + ") (" + maxPointX + ", " + maxPointZ + ")");
+                Utilities.msg(s, "&fChunk coords: &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")");
+                Utilities.msg(s, "&fWorld: &6" + world);
+                Utilities.msg(s, "&7---");
             } catch (IncompleteRegionException e) {
                 Utilities.msg(s, Strings.WEFIRST);
             }

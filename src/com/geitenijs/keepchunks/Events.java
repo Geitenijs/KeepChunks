@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
@@ -23,7 +22,9 @@ public class Events implements Listener {
         final String chunk = currentChunk.getX() + "#" + currentChunk.getZ() + "#"
                 + currentChunk.getWorld().getName();
         if (new HashSet<>(Utilities.chunks).contains(chunk)) {
-            Utilities.consoleMsgPrefixed("Chunk (" + currentChunk.getX() + "," + currentChunk.getZ() + ") in world '" + currentChunk.getWorld().getName() + "' is unloading, while it should be force-loaded.");
+            if (Utilities.config.getBoolean("general.debug")) {
+                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Chunk (" + currentChunk.getX() + "," + currentChunk.getZ() + ") in world '" + currentChunk.getWorld().getName() + "' is unloading, while it should be force-loaded.");
+            }
         }
     }
 
@@ -41,21 +42,20 @@ public class Events implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onWorldLoad(WorldLoadEvent e) {
-        if (Utilities.config.getBoolean("chunkload.onworldload")) {
-            for (final String chunk : Utilities.chunks) {
-                final String[] chunkCoordinates = chunk.split("#");
-                final int x = Integer.parseInt(chunkCoordinates[0]);
-                final int z = Integer.parseInt(chunkCoordinates[1]);
-                final String world = chunkCoordinates[2];
+        for (final String chunk : Utilities.chunks) {
+            final String[] chunkCoordinates = chunk.split("#");
+            final int x = Integer.parseInt(chunkCoordinates[0]);
+            final int z = Integer.parseInt(chunkCoordinates[1]);
+            final String world = chunkCoordinates[2];
+            if (Utilities.config.getBoolean("general.debug")) {
+                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
+            }
+            try {
+                Main.plugin.getServer().getWorld(world).loadChunk(x, z);
+                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+            } catch (NullPointerException ex) {
                 if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
-                }
-                try {
-                    Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                } catch (NullPointerException ex) {
-                    if (Utilities.config.getBoolean("general.debug")) {
-                        Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
-                    }
+                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
                 }
             }
         }

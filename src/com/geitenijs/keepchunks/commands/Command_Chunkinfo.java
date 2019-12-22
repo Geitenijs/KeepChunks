@@ -6,6 +6,7 @@ import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.hooks.Chunkinfo_WE;
 import com.geitenijs.keepchunks.commands.hooks.Chunkinfo_WG;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -44,24 +45,34 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                     final int x = currentChunk.getX();
                     final int z = currentChunk.getZ();
                     final int playerX = ((Player) s).getLocation().getBlockX();
+                    final int playerY = ((Player) s).getLocation().getBlockY();
                     final int playerZ = ((Player) s).getLocation().getBlockZ();
                     final String world = currentChunk.getWorld().getName();
                     final String chunk = x + "#" + z + "#" + world;
-                    Utilities.msg(s, "&2Your current chunk:");
+                    Utilities.msg(s, "&7---");
+                    Utilities.msg(s, "&fPlayer: &c(" + playerX + ", " + playerY + ", " + playerZ + ")");
+                    Utilities.msg(s, "&fChunk coords: &9(" + x + ", " + z + ")");
+                    Utilities.msg(s, "&fWorld: &6" + world);
                     Utilities.msg(s, "");
-                    Utilities.msg(s, "&fChunk coords: &6(" + x + ", " + z + ")");
-                    Utilities.msg(s, "&fCoordinates: &9(" + playerX + ", " + playerZ + ")");
-                    Utilities.msg(s, "&fWorld: &c" + world);
                     if (Utilities.chunks.contains(chunk)) {
-                        Utilities.msg(s, "&fMarked by KC: &2Yes");
+                        Utilities.msg(s, "&fMarked: &2Yes");
                     } else {
-                        Utilities.msg(s, "&fMarked by KC: &4No");
+                        Utilities.msg(s, "&fMarked: &4No");
+                    }
+                    if (Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                        Utilities.msg(s, "&fForce-loaded: &2Yes");
+                    } else {
+                        Utilities.msg(s, "&fForce-loaded: &4No");
                     }
                     if (Main.plugin.getServer().getWorld(world).isChunkLoaded(x, z)) {
-                        Utilities.msg(s, "&fCurrently loaded: &2Yes");
+                        Utilities.msg(s, "&fCurrently in memory: &2Yes");
                     } else {
-                        Utilities.msg(s, "&fCurrently loaded: &4No");
+                        Utilities.msg(s, "&fCurrently in memory: &4No");
                     }
+                    if (Utilities.chunks.contains(chunk) && !Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                        Utilities.msg(s, "&c&oPlease reload the plugin to update force-loaded chunks.");
+                    }
+                    Utilities.msg(s, "&7---");
                 } else {
                     Utilities.msg(s, Strings.ONLYPLAYER);
                 }
@@ -94,22 +105,35 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                     final int x = Integer.parseInt(args[2]);
                     final int z = Integer.parseInt(args[3]);
                     final String world = args[4];
+                    if (Bukkit.getWorld(world) == null) {
+                        Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+                        return false;
+                    }
                     final String chunk = x + "#" + z + "#" + world;
-                    Utilities.msg(s, "&2The specified chunk:");
+                    Utilities.msg(s, "&7---");
+                    Utilities.msg(s, "&fChunk coords: &9(" + x + ", " + z + ")");
+                    Utilities.msg(s, "&fWorld: &6" + world);
                     Utilities.msg(s, "");
-                    Utilities.msg(s, "&fChunk coords: &6(" + x + ", " + z + ")");
-                    Utilities.msg(s, "&fWorld: &c" + world);
                     if (Utilities.chunks.contains(chunk)) {
-                        Utilities.msg(s, "&fMarked by KC: &2Yes");
+                        Utilities.msg(s, "&fMarked: &2Yes");
                     } else {
-                        Utilities.msg(s, "&fMarked by KC: &4No");
+                        Utilities.msg(s, "&fMarked: &4No");
+                    }
+                    if (Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                        Utilities.msg(s, "&fForce-loaded: &2Yes");
+                    } else {
+                        Utilities.msg(s, "&fForce-loaded: &4No");
                     }
                     if (Main.plugin.getServer().getWorld(world).isChunkLoaded(x, z)) {
-                        Utilities.msg(s, "&fCurrently loaded: &2Yes");
+                        Utilities.msg(s, "&fCurrently in memory: &2Yes");
                     } else {
-                        Utilities.msg(s, "&fCurrently loaded: &4No");
+                        Utilities.msg(s, "&fCurrently in memory: &4No");
                     }
-                } catch (NullPointerException | NumberFormatException ex) {
+                    if (Utilities.chunks.contains(chunk) && !Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                        Utilities.msg(s, "&c&oPlease reload the plugin to update force-loaded chunks.");
+                    }
+                    Utilities.msg(s, "&7---");
+                } catch (NumberFormatException ex) {
                     Utilities.msg(s, Strings.UNUSABLE);
                 }
             } else {
@@ -135,13 +159,13 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                 Player player = (Player) s;
                 Location loc = player.getLocation();
                 if (newArgs.length == 2) {
-                    tabs.add(loc.getWorld().getName());
-                }
-                if (newArgs.length == 3) {
                     tabs.add(String.valueOf(loc.getChunk().getX()));
                 }
-                if (newArgs.length == 4) {
+                if (newArgs.length == 3) {
                     tabs.add(String.valueOf(loc.getChunk().getZ()));
+                }
+                if (newArgs.length == 4) {
+                    tabs.add(loc.getWorld().getName());
                 }
             } else {
                 if (newArgs.length == 2) {

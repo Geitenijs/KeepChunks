@@ -15,7 +15,7 @@ public class Command_List implements CommandExecutor, TabCompleter {
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
         if (args.length == 1) {
             if (Utilities.chunks.isEmpty()) {
-                Utilities.msg(s, "&cThere are currently no marked chunks.");
+                Utilities.msg(s, "&cThere don't seem to be any marked chunks.");
             } else {
                 Utilities.msg(s, "&aA list of all marked chunks will be shown below.");
                 Utilities.msg(s, "&7---");

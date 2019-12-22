@@ -26,35 +26,35 @@ public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
         final String world = args[3];
         if (Bukkit.getWorld(world) == null) {
             Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+            return false;
+        }
+        World realWorld = Bukkit.getWorld(world);
+        assert realWorld != null;
+        com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(realWorld);
+        RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(weWorld);
+        assert manager != null;
+        if (manager.getRegion(region) == null) {
+            Utilities.msg(s, "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
         } else {
-            World realWorld = Bukkit.getWorld(world);
-            assert realWorld != null;
-            com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(realWorld);
-            RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(weWorld);
-            assert manager != null;
-            if (manager.getRegion(region) == null) {
-                Utilities.msg(s, "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
-            } else {
-                BlockVector3 max = manager.getRegion(region).getMaximumPoint();
-                BlockVector3 min = manager.getRegion(region).getMinimumPoint();
-                Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(), max.getBlockZ());
-                Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(), min.getBlockZ());
-                final Chunk chunkMax = maxPoint.getChunk();
-                final Chunk chunkMin = minPoint.getChunk();
-                final int maxPointX = maxPoint.getBlockX();
-                final int maxPointZ = maxPoint.getBlockZ();
-                final int minPointX = minPoint.getBlockX();
-                final int minPointZ = minPoint.getBlockZ();
-                final int maxZ = chunkMax.getZ();
-                final int maxX = chunkMax.getX();
-                final int minX = chunkMin.getX();
-                final int minZ = chunkMin.getZ();
-                Utilities.msg(s, "&2WorldGuard region &f'" + region + "'&2:");
-                Utilities.msg(s, "");
-                Utilities.msg(s, "&fChunk coords: &6(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")");
-                Utilities.msg(s, "&fCoordinates: &9(" + minPointX + ", " + minPointZ + ") (" + maxPointX + ", " + maxPointZ + ")");
-                Utilities.msg(s, "&fWorld: &c" + world);
-            }
+            BlockVector3 max = manager.getRegion(region).getMaximumPoint();
+            BlockVector3 min = manager.getRegion(region).getMinimumPoint();
+            Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(), max.getBlockZ());
+            Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(), min.getBlockZ());
+            final Chunk chunkMax = maxPoint.getChunk();
+            final Chunk chunkMin = minPoint.getChunk();
+            final int maxPointX = maxPoint.getBlockX();
+            final int maxPointZ = maxPoint.getBlockZ();
+            final int minPointX = minPoint.getBlockX();
+            final int minPointZ = minPoint.getBlockZ();
+            final int maxZ = chunkMax.getZ();
+            final int maxX = chunkMax.getX();
+            final int minX = chunkMin.getX();
+            final int minZ = chunkMin.getZ();
+            Utilities.msg(s, "&7---");
+            Utilities.msg(s, "&fWorldGuard region &2" + region + "&f: &c(" + minPointX + ", " + minPointZ + ") (" + maxPointX + ", " + maxPointZ + ")");
+            Utilities.msg(s, "&fChunk coords: &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")");
+            Utilities.msg(s, "&fWorld: &6" + world);
+            Utilities.msg(s, "&7---");
         }
         return true;
     }

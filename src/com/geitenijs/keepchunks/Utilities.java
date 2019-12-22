@@ -67,20 +67,17 @@ public class Utilities {
                 + "\n  releaseallprotection: Do you want to restrict the 'release all' command to the console?"
                 + "\nupdates:"
                 + "\n  check: When set to true, the plugin will check for updates. No automatic downloads, just a subtle notification in the console."
-                + "\n  notify: Do you want to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'."
-                + "\nchunkload:"
-                + "\n  dynamic: Enable to automatically load newly marked chunks."
-                + "\n  onstartup: Enable to load all marked chunks on server startup."
-                + "\n  onworldload: Enable to load all marked chunks in a world, once the world is loaded in memory.");
+                + "\n  notify: Do you want to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'.");
         config.addDefault("general.debug", false);
         config.addDefault("general.releaseallprotection", true);
         config.addDefault("updates.check", true);
         config.addDefault("updates.notify", true);
-        config.addDefault("chunkload.dynamic", true);
-        config.addDefault("chunkload.onstartup", true);
-        config.addDefault("chunkload.onworldload", true);
+        config.set("chunkload.dynamic", null);
+        config.set("chunkload.onstartup", null);
+        config.set("chunkload.onworldload", null);
         config.set("chunkload.all", null);
         config.set("chunkload.force", null);
+        config.set("chunkload", null);
         data.options().header(Strings.ASCIILOGO
                 + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
                 "\nInformation & Support: " + Strings.WEBSITE
@@ -107,28 +104,21 @@ public class Utilities {
         Bukkit.getPluginManager().registerEvents(new Events(), Main.plugin);
     }
 
-    static void loadChunks() {
-        if (config.getBoolean("chunkload.onstartup")) {
-            for (final String chunk : chunks) {
-                final String[] chunkCoordinates = chunk.split("#");
-                final int x = Integer.parseInt(chunkCoordinates[0]);
-                final int z = Integer.parseInt(chunkCoordinates[1]);
-                final String world = chunkCoordinates[2];
+    public static void loadChunks() {
+        for (final String chunk : chunks) {
+            final String[] chunkCoordinates = chunk.split("#");
+            final int x = Integer.parseInt(chunkCoordinates[0]);
+            final int z = Integer.parseInt(chunkCoordinates[1]);
+            final String world = chunkCoordinates[2];
+            if (config.getBoolean("general.debug")) {
+                consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
+            }
+            try {
+                Main.plugin.getServer().getWorld(world).loadChunk(x, z);
+                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+            } catch (NullPointerException ex) {
                 if (config.getBoolean("general.debug")) {
-                    consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
-                }
-                try {
-                    Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                    if (Main.version.contains("v1_14_R1")) {
-                        try {
-                            Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
-                        } catch (Exception ignored) {
-                        }
-                    }
-                } catch (NullPointerException ex) {
-                    if (config.getBoolean("general.debug")) {
-                        consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
-                    }
+                    consoleMsgPrefixed(Strings.DEBUGPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
                 }
             }
         }
@@ -163,9 +153,6 @@ public class Utilities {
         metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
         metrics.addCustomChart(new Metrics.SimplePie("updateCheckEnabled", () -> config.getString("updates.check")));
         metrics.addCustomChart(new Metrics.SimplePie("updateNotificationEnabled", () -> config.getString("updates.notify")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadDynamicEnabled", () -> config.getString("chunkload.dynamic")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnStartupEnabled", () -> config.getString("chunkload.onstartup")));
-        metrics.addCustomChart(new Metrics.SimplePie("chunkloadOnWorldloadEnabled", () -> config.getString("chunkload.onworldload")));
     }
 
     static void done() {

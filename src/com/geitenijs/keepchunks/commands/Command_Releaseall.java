@@ -19,21 +19,27 @@ public class Command_Releaseall implements CommandExecutor, TabCompleter {
             if (Utilities.config.getBoolean("general.releaseallprotection")) {
                 if (s instanceof Player) {
                     Utilities.msg(s, Strings.ONLYCONSOLE);
-                    return true;
+                    return false;
                 }
             }
-            for (final String chunk : Utilities.chunks) {
-                final String[] chunkCoordinates = chunk.split("#");
-                final int x = Integer.parseInt(chunkCoordinates[0]);
-                final int z = Integer.parseInt(chunkCoordinates[1]);
-                final String world = chunkCoordinates[2];
-                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+            if (Utilities.chunks.isEmpty()) {
+                Utilities.msg(s, "&cThere don't seem to be any marked chunks.");
+            } else {
+                Utilities.msg(s, "&7&oReleasing all chunks...");
+                int totalChunks = Utilities.chunks.size();
+                for (final String chunk : Utilities.chunks) {
+                    final String[] chunkCoordinates = chunk.split("#");
+                    final int x = Integer.parseInt(chunkCoordinates[0]);
+                    final int z = Integer.parseInt(chunkCoordinates[1]);
+                    final String world = chunkCoordinates[2];
+                    Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                }
+                Utilities.chunks.clear();
+                Utilities.data.set("chunks", new ArrayList<>());
+                Utilities.saveDataFile();
+                Utilities.reloadDataFile();
+                Utilities.msg(s, "&aAll &f"+ totalChunks + "&a marked chunks have been released.");
             }
-            Utilities.chunks.clear();
-            Utilities.data.set("chunks", new ArrayList<>());
-            Utilities.saveDataFile();
-            Utilities.reloadDataFile();
-            Utilities.msg(s, "&aAll marked chunks have been released.");
         } else {
             Utilities.msg(s, Strings.RELEASEALLUSAGE);
         }

@@ -6,6 +6,7 @@ import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.hooks.Releaseregion_WE;
 import com.geitenijs.keepchunks.commands.hooks.Releaseregion_WG;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -74,23 +75,31 @@ public class Command_Releaseregion implements CommandExecutor, TabCompleter {
                     final int maxX = max(X1, X2);
                     final int maxZ = max(Z1, Z2);
                     final String world = args[6];
-                    Utilities.msg(s, "&fReleasing chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
+                    if (Bukkit.getWorld(world) == null) {
+                        Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+                        return false;
+                    }
+                    Utilities.msg(s, "&fReleasing chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
                     for (int x = minX; x <= maxX; ++x) {
                         for (int z = minZ; z <= maxZ; ++z) {
                             final String chunk = x + "#" + z + "#" + world;
-                            if (!Utilities.chunks.contains(chunk)) {
-                                Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
+                            if (!Utilities.chunks.contains(chunk) && !Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                                if (Utilities.config.getBoolean("general.debug")) {
+                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' isn't marked.");
+                                }
                             } else {
+                                if (Utilities.config.getBoolean("general.debug")) {
+                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
+                                }
                                 Utilities.chunks.remove(chunk);
                                 Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
-                                Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
                             }
                         }
                     }
                     Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                     Utilities.saveDataFile();
                     Utilities.reloadDataFile();
-                    Utilities.msg(s, "&fReleased chunks between &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
+                    Utilities.msg(s, "&fReleased chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
                 } catch (NumberFormatException ex) {
                     Utilities.msg(s, Strings.UNUSABLE);
                 }

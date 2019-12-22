@@ -3,6 +3,7 @@ package com.geitenijs.keepchunks.commands;
 import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -21,30 +22,22 @@ public class Command_Keepchunk implements CommandExecutor, TabCompleter {
             if (args[1].equalsIgnoreCase("current")) {
                 if (s instanceof Player) {
                     final Chunk currentChunk = ((Player) s).getLocation().getChunk();
-                    final String chunk = currentChunk.getX() + "#" + currentChunk.getZ() + "#" + currentChunk.getWorld().getName();
-                    if (Utilities.chunks.contains(chunk)) {
-                        Utilities.msg(s, "&cChunk &f(" + currentChunk.getX() + "," + currentChunk.getZ() + ")&c in world &f'" + currentChunk.getWorld().getName() + "'&c is already marked.");
+                    final int x = currentChunk.getX();
+                    final int z = currentChunk.getZ();
+                    final String world = currentChunk.getWorld().getName();
+                    final String chunk = x + "#" + z + "#" + world;
+                    if (Utilities.chunks.contains(chunk) && Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                        Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c is already marked.");
                     } else {
-                        final String world = currentChunk.getWorld().getName();
-                        final int x = currentChunk.getX();
-                        final int z = currentChunk.getZ();
+                        if (Utilities.config.getBoolean("general.debug")) {
+                            Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
+                        }
                         Utilities.chunks.add(chunk);
+                        Main.plugin.getServer().getWorld(world).loadChunk(x, z);
+                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
                         Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();
-                        if (Utilities.config.getBoolean("chunkload.dynamic")) {
-                            if (Utilities.config.getBoolean("general.debug")) {
-                                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
-                            }
-                            try {
-                                Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                            } catch (NullPointerException ex) {
-                                if (Utilities.config.getBoolean("general.debug")) {
-                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
-                                }
-                            }
-                        }
                         Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
                     }
                 } else {
@@ -59,27 +52,23 @@ public class Command_Keepchunk implements CommandExecutor, TabCompleter {
                     final int x = Integer.parseInt(args[2]);
                     final int z = Integer.parseInt(args[3]);
                     final String world = args[4];
+                    if (Bukkit.getWorld(world) == null) {
+                        Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+                        return false;
+                    }
                     final String chunk = x + "#" + z + "#" + world;
-                    if (Utilities.chunks.contains(chunk)) {
+                    if (Utilities.chunks.contains(chunk) && Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                         Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c is already marked.");
                     } else {
+                        if (Utilities.config.getBoolean("general.debug")) {
+                            Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
+                        }
                         Utilities.chunks.add(chunk);
+                        Main.plugin.getServer().getWorld(world).loadChunk(x, z);
+                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
                         Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();
-                        if (Utilities.config.getBoolean("chunkload.dynamic")) {
-                            if (Utilities.config.getBoolean("general.debug")) {
-                                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
-                            }
-                            try {
-                                Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-                            } catch (NullPointerException ex) {
-                                if (Utilities.config.getBoolean("general.debug")) {
-                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "The world '" + world + "' could not be found. Has it been removed?");
-                                }
-                            }
-                        }
                         Utilities.msg(s, "&fMarked chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
                     }
                 } catch (NumberFormatException ex) {
