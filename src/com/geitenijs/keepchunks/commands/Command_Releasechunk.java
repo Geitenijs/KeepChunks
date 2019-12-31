@@ -1,6 +1,5 @@
 package com.geitenijs.keepchunks.commands;
 
-import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import org.bukkit.Bukkit;
@@ -26,14 +25,14 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                     final int z = currentChunk.getZ();
                     final String world = currentChunk.getWorld().getName();
                     final String chunk = x + "#" + z + "#" + world;
-                    if (!Utilities.chunks.contains(chunk) && !Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (!Utilities.chunks.contains(chunk) && !Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                         Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
                     } else {
                         if (Utilities.config.getBoolean("general.debug")) {
-                            Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
+                            Utilities.consoleMsg(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
                         }
                         Utilities.chunks.remove(chunk);
-                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                        Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                         Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();
@@ -57,14 +56,14 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                         return false;
                     }
                     final String chunk = x + "#" + z + "#" + world;
-                    if (!Utilities.chunks.contains(chunk) && !Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (!Utilities.chunks.contains(chunk) && !Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                         Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
                     } else {
                         if (Utilities.config.getBoolean("general.debug")) {
-                            Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
+                            Utilities.consoleMsg(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
                         }
                         Utilities.chunks.remove(chunk);
-                        Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                        Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                         Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();

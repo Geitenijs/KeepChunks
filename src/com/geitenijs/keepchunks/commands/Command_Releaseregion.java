@@ -83,16 +83,16 @@ public class Command_Releaseregion implements CommandExecutor, TabCompleter {
                     for (int x = minX; x <= maxX; ++x) {
                         for (int z = minZ; z <= maxZ; ++z) {
                             final String chunk = x + "#" + z + "#" + world;
-                            if (!Utilities.chunks.contains(chunk) && !Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                            if (!Utilities.chunks.contains(chunk) && !Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                                 if (Utilities.config.getBoolean("general.debug")) {
-                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' isn't marked.");
+                                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' isn't marked.");
                                 }
                             } else {
                                 if (Utilities.config.getBoolean("general.debug")) {
-                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
+                                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
                                 }
                                 Utilities.chunks.remove(chunk);
-                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                                Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                             }
                         }
                     }

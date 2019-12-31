@@ -1,6 +1,5 @@
 package com.geitenijs.keepchunks.commands;
 
-import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import org.bukkit.*;
@@ -104,7 +103,7 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
             if (isRail && !history.contains(candidate)) {
                 if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
+                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
                 }
                 updateData(candidate.getChunk());
                 todo.add(candidate);
@@ -119,7 +118,7 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
             if (isRail && !history.contains(candidate)) {
                 if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
+                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
                 }
                 updateData(candidate.getChunk());
                 todo.add(candidate);
@@ -134,7 +133,7 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
             if (isRail && !history.contains(candidate)) {
                 if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
+                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
                 }
                 updateData(candidate.getChunk());
                 todo.add(candidate);
@@ -149,7 +148,7 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
             if (isRail && !history.contains(candidate)) {
                 if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
+                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
                 }
                 updateData(candidate.getChunk());
                 todo.add(candidate);
@@ -171,12 +170,12 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             for (int j = -1; j < 2; ++j) {
                 final int z = currentChunk.getZ() + j;
                 final String chunk = x + "#" + z + "#" + world;
-                if (Utilities.chunks.contains(chunk) && Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                if (Utilities.chunks.contains(chunk) && Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                     if (Utilities.config.getBoolean("general.debug")) {
-                        Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
+                        Utilities.consoleMsg(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
                     }
                     Utilities.chunks.remove(chunk);
-                    Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
+                    Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                     Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                     Utilities.saveDataFile();
                     Utilities.reloadDataFile();

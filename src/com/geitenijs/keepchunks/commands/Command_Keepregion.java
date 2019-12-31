@@ -1,7 +1,6 @@
 package com.geitenijs.keepchunks.commands;
 
 import com.geitenijs.keepchunks.Hooks;
-import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.hooks.Keepregion_WE;
@@ -83,17 +82,17 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
                     for (int x = minX; x <= maxX; ++x) {
                         for (int z = minZ; z <= maxZ; ++z) {
                             final String chunk = x + "#" + z + "#" + world;
-                            if (Utilities.chunks.contains(chunk) && Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                            if (Utilities.chunks.contains(chunk) && Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                                 if (Utilities.config.getBoolean("general.debug")) {
-                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' is already marked.");
+                                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' is already marked.");
                                 }
                             } else {
                                 if (Utilities.config.getBoolean("general.debug")) {
-                                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
+                                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
                                 }
                                 Utilities.chunks.add(chunk);
-                                Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+                                Bukkit.getServer().getWorld(world).loadChunk(x, z);
+                                Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
                             }
                         }
                     }

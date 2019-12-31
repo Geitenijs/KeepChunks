@@ -1,6 +1,5 @@
 package com.geitenijs.keepchunks.commands.hooks;
 
-import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.CommandWrapper;
@@ -11,6 +10,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -48,17 +48,17 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 for (int x = minX; x <= maxX; ++x) {
                     for (int z = minZ; z <= maxZ; ++z) {
                         final String chunk = x + "#" + z + "#" + world;
-                        if (Utilities.chunks.contains(chunk) && Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                        if (Utilities.chunks.contains(chunk) && Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                             if (Utilities.config.getBoolean("general.debug")) {
-                                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' is already marked.");
+                                Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' is already marked.");
                             }
                         } else {
                             if (Utilities.config.getBoolean("general.debug")) {
-                                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
+                                Utilities.consoleMsg(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
                             }
                             Utilities.chunks.add(chunk);
-                            Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                            Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+                            Bukkit.getServer().getWorld(world).loadChunk(x, z);
+                            Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
                         }
                     }
                 }
@@ -85,16 +85,16 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
         }
         if (args[1].equals("coords")) {
             try {
-                Player weplayer = ((OfflinePlayer) s).getPlayer();
-                BukkitPlayer bPlayer = BukkitAdapter.adapt(weplayer);
+                Player wePlayer = ((OfflinePlayer) s).getPlayer();
+                BukkitPlayer bPlayer = BukkitAdapter.adapt(wePlayer);
                 LocalSession session = WorldEdit.getInstance().getSessionManager().get(bPlayer);
                 final Region sel = session.getSelection(bPlayer.getWorld());
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
-                assert weplayer != null;
-                Location maxPoint = new Location(weplayer.getWorld(), max.getBlockX(), max.getBlockY(),
+                assert wePlayer != null;
+                Location maxPoint = new Location(wePlayer.getWorld(), max.getBlockX(), max.getBlockY(),
                         max.getBlockZ());
-                Location minPoint = new Location(weplayer.getWorld(), min.getBlockX(), min.getBlockY(),
+                Location minPoint = new Location(wePlayer.getWorld(), min.getBlockX(), min.getBlockY(),
                         min.getBlockZ());
                 final Chunk chunkMax = maxPoint.getChunk();
                 final Chunk chunkMin = minPoint.getChunk();

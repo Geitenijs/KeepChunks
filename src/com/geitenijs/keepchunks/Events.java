@@ -23,7 +23,7 @@ public class Events implements Listener {
                 + currentChunk.getWorld().getName();
         if (new HashSet<>(Utilities.chunks).contains(chunk)) {
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Chunk (" + currentChunk.getX() + "," + currentChunk.getZ() + ") in world '" + currentChunk.getWorld().getName() + "' is unloading, while it should be force-loaded.");
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + currentChunk.getX() + "," + currentChunk.getZ() + ") in world '" + currentChunk.getWorld().getName() + "' is unloading, while it should be force-loaded.");
             }
         }
     }
@@ -48,14 +48,14 @@ public class Events implements Listener {
             final int z = Integer.parseInt(chunkCoordinates[1]);
             final String world = chunkCoordinates[2];
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
             }
             try {
-                Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+                Bukkit.getServer().getWorld(world).loadChunk(x, z);
+                Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
             } catch (NullPointerException ex) {
                 if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
+                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
                 }
             }
         }

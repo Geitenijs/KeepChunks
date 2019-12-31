@@ -6,9 +6,9 @@ public class Strings {
     static final String INTERNALPREFIX = "[KeepChunks] ";
     public static final String DEBUGPREFIX = "[DEBUG] ";
     public static final String GAMEPREFIX = "&2Keep&8Chunks &7// ";
-    public static final String VERSION = "1.6.0";
+    public static final String VERSION = "1.6.1";
     public static final String AUTHOR = "Geitenijs";
-    public static final String COPYRIGHT = "2015-2019";
+    public static final String COPYRIGHT = "2015-2020";
     static final int RESOURCEID = 23307;
     static final String WEBSITE = "https://www.spigotmc.org/resources/" + Strings.RESOURCEID;
     static final String ASCIILOGO = "" +

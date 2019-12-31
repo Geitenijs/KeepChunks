@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -36,26 +37,26 @@ public class Utilities {
     }
 
     static void startupText() {
-        consoleMsg("");
-        consoleMsg("§2 _     _                  §8 _______ _                 _          ");
-        consoleMsg("§2(_)   | |                 §8(_______) |               | |  §2v" + Strings.VERSION);
-        consoleMsg("§2 _____| |_____ _____ ____ §8 _      | |__  _   _ ____ | |  _  ___ ");
-        consoleMsg("§2|  _   _) ___ | ___ |  _ \\§8| |     |  _ \\| | | |  _ \\| |_/ )/___)");
-        consoleMsg("§2| |  \\ \\| ____| ____| |_| §8| |_____| | | | |_| | | | |  _ (|___ |");
-        consoleMsg("§2|_|   \\_)_____)_____)  __/§8 \\______)_| |_|____/|_| |_|_| \\_|___/ ");
-        consoleMsg("§2                    |_|   §8                                      ");
-        consoleMsg("");
+        consoleBanner("");
+        consoleBanner("&2 _     _                  &8 _______ _                 _          ");
+        consoleBanner("&2(_)   | |                 &8(_______) |               | |  &2v" + Strings.VERSION);
+        consoleBanner("&2 _____| |_____ _____ ____ &8 _      | |__  _   _ ____ | |  _  ___ ");
+        consoleBanner("&2|  _   _) ___ | ___ |  _ \\&8| |     |  _ \\| | | |  _ \\| |_/ )/___)");
+        consoleBanner("&2| |  \\ \\| ____| ____| |_| &8| |_____| | | | |_| | | | |  _ (|___ |");
+        consoleBanner("&2|_|   \\_)_____)_____)  __/&8 \\______)_| |_|____/|_| |_|_| \\_|___/ ");
+        consoleBanner("&2                    |_|   &8                                      ");
+        consoleBanner("");
     }
 
     static void errorText() {
-        consoleMsg("");
-        consoleMsg("§c _______ ______  ______ _______ ______  ");
-        consoleMsg("§c(_______|_____ \\(_____ (_______|_____ \\ ");
-        consoleMsg("§c _____   _____) )_____) )     _ _____) )");
-        consoleMsg("§c|  ___) |  __  /|  __  / |   | |  __  / ");
-        consoleMsg("§c| |_____| |  \\ \\| |  \\ \\ |___| | |  \\ \\ ");
-        consoleMsg("§c|_______)_|   |_|_|   |_\\_____/|_|   |_|");
-        consoleMsg("");
+        consoleBanner("");
+        consoleBanner("&c _______ ______  ______ _______ ______  ");
+        consoleBanner("&c(_______|_____ \\(_____ (_______|_____ \\ ");
+        consoleBanner("&c _____   _____) )_____) )     _ _____) )");
+        consoleBanner("&c|  ___) |  __  /|  __  / |   | |  __  / ");
+        consoleBanner("&c| |_____| |  \\ \\| |  \\ \\ |___| | |  \\ \\ ");
+        consoleBanner("&c|_______)_|   |_|_|   |_\\_____/|_|   |_|");
+        consoleBanner("");
     }
 
     static void createConfigs() {
@@ -63,11 +64,13 @@ public class Utilities {
                 + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
                 "\nInformation & Support: " + Strings.WEBSITE
                 + "\n\ngeneral:"
+                + "\n  colourfulconsole: Console messages will be coloured when this is enabled."
                 + "\n  debug: When set to true, the plugin will log more information to the console."
                 + "\n  releaseallprotection: Do you want to restrict the 'release all' command to the console?"
                 + "\nupdates:"
-                + "\n  check: When set to true, the plugin will check for updates. No automatic downloads, just a subtle notification in the console."
-                + "\n  notify: Do you want to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'.");
+                + "\n  check: When enabled, the plugin will check for updates. No automatic downloads, just a subtle notification in the console."
+                + "\n  notify: Would you like to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'.");
+        config.addDefault("general.colourfulconsole", true);
         config.addDefault("general.debug", false);
         config.addDefault("general.releaseallprotection", true);
         config.addDefault("updates.check", true);
@@ -111,14 +114,14 @@ public class Utilities {
             final int z = Integer.parseInt(chunkCoordinates[1]);
             final String world = chunkCoordinates[2];
             if (config.getBoolean("general.debug")) {
-                consoleMsgPrefixed(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
+                consoleMsg(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
             }
             try {
-                Main.plugin.getServer().getWorld(world).loadChunk(x, z);
-                Main.plugin.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
+                Bukkit.getServer().getWorld(world).loadChunk(x, z);
+                Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
             } catch (NullPointerException ex) {
                 if (config.getBoolean("general.debug")) {
-                    consoleMsgPrefixed(Strings.DEBUGPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
+                    consoleMsg(Strings.DEBUGPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
                 }
             }
         }
@@ -149,6 +152,7 @@ public class Utilities {
             }
             return Bukkit.getServer().getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
         }));
+        metrics.addCustomChart(new Metrics.SimplePie("colourfulConsoleEnabled", () -> config.getString("general.colourfulconsole")));
         metrics.addCustomChart(new Metrics.SimplePie("debugEnabled", () -> config.getString("general.debug")));
         metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
         metrics.addCustomChart(new Metrics.SimplePie("updateCheckEnabled", () -> config.getString("updates.check")));
@@ -156,7 +160,7 @@ public class Utilities {
     }
 
     static void done() {
-        consoleMsgPrefixed(Strings.PLUGIN + " v" + Strings.VERSION + " has been enabled");
+        consoleMsg(Strings.PLUGIN + " v" + Strings.VERSION + " has been enabled");
     }
 
     private static void checkForUpdates() {
@@ -167,17 +171,17 @@ public class Utilities {
                     .handleResponse((versionResponse, version) -> {
                         switch (versionResponse) {
                             case FOUND_NEW:
-                                consoleMsgPrefixed("A new release of " + Strings.PLUGIN + ", v" + version + ", is available! You are still on v" + Strings.VERSION + ".");
-                                consoleMsgPrefixed("To download this update, head over to " + Strings.WEBSITE + "/updates in your browser.");
+                                consoleMsg("A new release of " + Strings.PLUGIN + ", v" + version + ", is available! You are still on v" + Strings.VERSION + ".");
+                                consoleMsg("To download this update, head over to " + Strings.WEBSITE + "/updates in your browser.");
                                 updateVersion = version;
                                 updateAvailable = true;
                                 break;
                             case LATEST:
-                                consoleMsgPrefixed("You are running the latest version.");
+                                consoleMsg("You are running the latest version.");
                                 updateAvailable = false;
                                 break;
                             case UNAVAILABLE:
-                                consoleMsgPrefixed("An error occurred while checking for updates.");
+                                consoleMsg("An error occurred while checking for updates.");
                                 updateAvailable = false;
                         }
                     }).check();
@@ -206,7 +210,7 @@ public class Utilities {
         try {
             config.save(configFile);
         } catch (IOException ex) {
-            Main.plugin.getLogger().log(Level.SEVERE, "Could not save " + configFile, ex);
+            Bukkit.getLogger().log(Level.SEVERE, "Could not save " + configFile, ex);
         }
     }
 
@@ -224,19 +228,31 @@ public class Utilities {
         try {
             data.save(dataFile);
         } catch (IOException ex) {
-            Main.plugin.getLogger().log(Level.SEVERE, "Could not save " + dataFile, ex);
+            Bukkit.getLogger().log(Level.SEVERE, "Could not save " + dataFile, ex);
         }
     }
 
-    public static void msg(final CommandSender s, final String message) {
-        s.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    public static void msg(final CommandSender s, String msg) {
+        if (s instanceof Player) {
+            msg = ChatColor.translateAlternateColorCodes('&', msg);
+        } else {
+            msg = ChatColor.translateAlternateColorCodes('&', Strings.INTERNALPREFIX + msg);
+            if (!config.getBoolean("general.colourfulconsole")) {
+                msg = ChatColor.stripColor(msg);
+            }
+        }
+        s.sendMessage(msg);
     }
 
-    private static void consoleMsg(final String message) {
-        Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    public static void consoleMsg(String msg) {
+        msg = ChatColor.translateAlternateColorCodes('&', Strings.INTERNALPREFIX + msg);
+        if (!config.getBoolean("general.colourfulconsole")) {
+            msg = ChatColor.stripColor(msg);
+        }
+        Bukkit.getServer().getConsoleSender().sendMessage(msg);
     }
 
-    public static void consoleMsgPrefixed(final String message) {
-        Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', Strings.INTERNALPREFIX + message));
+    private static void consoleBanner(final String message) {
+        Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 }

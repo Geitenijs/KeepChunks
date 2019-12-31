@@ -1,9 +1,9 @@
                   LICENSE AND TERMS OF KEEPCHUNKS, BY GEITENIJS
-                          LAST UPDATED ON 29/12/2018
+                          LAST UPDATED ON 31/12/2019
 
     APPLIES TO USAGE, DISTRIBUTION, AND MODIFICATION OF SOFTWARE AND ITS SOURCE.
 
-Copyright (c) 2015-2019 Geitenijs
+Copyright (c) 2015-2020 Geitenijs
 
 All rights are reserved to change, modify, or update this license without
 any prior notice or disclosure.

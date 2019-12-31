@@ -1,7 +1,6 @@
 package com.geitenijs.keepchunks.commands;
 
 import com.geitenijs.keepchunks.Hooks;
-import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.hooks.Chunkinfo_WE;
@@ -59,17 +58,17 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                     } else {
                         Utilities.msg(s, "&fMarked: &4No");
                     }
-                    if (Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                         Utilities.msg(s, "&fForce-loaded: &2Yes");
                     } else {
                         Utilities.msg(s, "&fForce-loaded: &4No");
                     }
-                    if (Main.plugin.getServer().getWorld(world).isChunkLoaded(x, z)) {
+                    if (Bukkit.getServer().getWorld(world).isChunkLoaded(x, z)) {
                         Utilities.msg(s, "&fCurrently in memory: &2Yes");
                     } else {
                         Utilities.msg(s, "&fCurrently in memory: &4No");
                     }
-                    if (Utilities.chunks.contains(chunk) && !Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (Utilities.chunks.contains(chunk) && !Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                         Utilities.msg(s, "&c&oPlease reload the plugin to update force-loaded chunks.");
                     }
                     Utilities.msg(s, "&7---");
@@ -119,17 +118,17 @@ public class Command_Chunkinfo implements CommandExecutor, TabCompleter {
                     } else {
                         Utilities.msg(s, "&fMarked: &4No");
                     }
-                    if (Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                         Utilities.msg(s, "&fForce-loaded: &2Yes");
                     } else {
                         Utilities.msg(s, "&fForce-loaded: &4No");
                     }
-                    if (Main.plugin.getServer().getWorld(world).isChunkLoaded(x, z)) {
+                    if (Bukkit.getServer().getWorld(world).isChunkLoaded(x, z)) {
                         Utilities.msg(s, "&fCurrently in memory: &2Yes");
                     } else {
                         Utilities.msg(s, "&fCurrently in memory: &4No");
                     }
-                    if (Utilities.chunks.contains(chunk) && !Main.plugin.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (Utilities.chunks.contains(chunk) && !Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
                         Utilities.msg(s, "&c&oPlease reload the plugin to update force-loaded chunks.");
                     }
                     Utilities.msg(s, "&7---");

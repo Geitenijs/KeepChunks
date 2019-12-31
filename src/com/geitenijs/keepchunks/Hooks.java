@@ -23,7 +23,7 @@ public class Hooks {
             WorldEdit = false;
             incompatibleWorldEdit = false;
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_MISSING);
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_MISSING);
             }
             return;
         }
@@ -35,7 +35,7 @@ public class Hooks {
             WorldEdit = false;
             incompatibleWorldEdit = true;
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_INCOMPATIBLE);
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_INCOMPATIBLE);
             }
             return;
         }
@@ -43,13 +43,13 @@ public class Hooks {
             WorldEdit = true;
             incompatibleWorldEdit = false;
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_COMPATIBLE);
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_COMPATIBLE);
             }
         } else {
             WorldEdit = false;
             incompatibleWorldEdit = true;
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_INCOMPATIBLE);
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WE_INCOMPATIBLE);
             }
         }
     }
@@ -60,7 +60,7 @@ public class Hooks {
             WorldGuard = false;
             incompatibleWorldGuard = false;
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_MISSING);
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_MISSING);
             }
             return;
         }
@@ -72,7 +72,7 @@ public class Hooks {
             WorldGuard = false;
             incompatibleWorldGuard = true;
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_INCOMPATIBLE);
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_INCOMPATIBLE);
             }
             return;
         }
@@ -80,13 +80,13 @@ public class Hooks {
             WorldGuard = true;
             incompatibleWorldGuard = false;
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_COMPATIBLE);
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_COMPATIBLE);
             }
         } else {
             WorldGuard = false;
             incompatibleWorldGuard = true;
             if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsgPrefixed(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_INCOMPATIBLE);
+                Utilities.consoleMsg(Strings.DEBUGPREFIX + Strings.DEPENDENCIES_WG_INCOMPATIBLE);
             }
         }
     }
