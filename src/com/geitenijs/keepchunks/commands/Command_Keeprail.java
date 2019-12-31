@@ -1,6 +1,5 @@
 package com.geitenijs.keepchunks.commands;
 
-import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import org.bukkit.*;
@@ -40,7 +39,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                             ++totalRails;
                         }
                         Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");
-                        Utilities.msg(s, "&fMarked a total of &9" + totalChunks + "&f chunks in world &6'" + loc.getWorld().getName() +"'&f.");
+                        Utilities.msg(s, "&fMarked a total of &9" + totalChunks + "&f chunks in world &6'" + loc.getWorld().getName() + "'&f.");
                     }
                     totalRails = 0;
                     totalChunks = 0;
@@ -81,7 +80,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                             ++totalRails;
                         }
                         Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");
-                        Utilities.msg(s, "&fMarked a total of &9" + totalChunks + "&f chunks in world &6'" + loc.getWorld().getName() +"'&f.");
+                        Utilities.msg(s, "&fMarked a total of &9" + totalChunks + "&f chunks in world &6'" + loc.getWorld().getName() + "'&f.");
                     }
                     totalRails = 0;
                     totalChunks = 0;

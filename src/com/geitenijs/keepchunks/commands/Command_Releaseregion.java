@@ -1,7 +1,6 @@
 package com.geitenijs.keepchunks.commands;
 
 import com.geitenijs.keepchunks.Hooks;
-import com.geitenijs.keepchunks.Main;
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.hooks.Releaseregion_WE;

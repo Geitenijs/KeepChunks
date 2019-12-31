@@ -38,7 +38,7 @@ public class Command_Releaseall implements CommandExecutor, TabCompleter {
                 Utilities.data.set("chunks", new ArrayList<>());
                 Utilities.saveDataFile();
                 Utilities.reloadDataFile();
-                Utilities.msg(s, "&aAll &f"+ totalChunks + "&a marked chunks have been released.");
+                Utilities.msg(s, "&aAll &f" + totalChunks + "&a marked chunks have been released.");
             }
         } else {
             Utilities.msg(s, Strings.RELEASEALLUSAGE);
