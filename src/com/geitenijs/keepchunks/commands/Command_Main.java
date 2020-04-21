@@ -2,7 +2,6 @@ package com.geitenijs.keepchunks.commands;
 
 import com.geitenijs.keepchunks.Strings;
 import com.geitenijs.keepchunks.Utilities;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,15 +13,7 @@ import java.util.List;
 public class Command_Main implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        if (Bukkit.getVersion().contains("Spigot")) {
-            Utilities.msg(s, Strings.GAMEPREFIX + "&fRunning &9v" + Strings.VERSION + "&f on &cSpigot");
-        } else if (Bukkit.getVersion().contains("Paper")) {
-            Utilities.msg(s, Strings.GAMEPREFIX + "&fRunning &9v" + Strings.VERSION + "&f on &cPaper");
-        } else if (Bukkit.getVersion().contains("Bukkit")) {
-            Utilities.msg(s, Strings.GAMEPREFIX + "&fRunning &9v" + Strings.VERSION + "&f on &cBukkit");
-        } else {
-            Utilities.msg(s, Strings.GAMEPREFIX + "&fRunning &9v" + Strings.VERSION);
-        }
+        Utilities.msg(s, Strings.GAMEPREFIX + "&fRunning &9v" + Strings.VERSION);
         Utilities.msg(s, Strings.GAMEPREFIX + "&fMade by &6" + Strings.AUTHOR + "&f, © " + Strings.COPYRIGHT);
         return true;
     }
