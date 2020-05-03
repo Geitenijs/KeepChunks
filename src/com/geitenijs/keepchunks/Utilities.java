@@ -36,7 +36,7 @@ public class Utilities {
         chunkloadAll = new HashSet<>();
     }
 
-    static void startupText() {
+    static void pluginBanner() {
         consoleBanner("");
         consoleBanner("&2 _     _                  &8 _______ _                 _          ");
         consoleBanner("&2(_)   | |                 &8(_______) |               | |  &2v" + Strings.VERSION);
@@ -48,7 +48,7 @@ public class Utilities {
         consoleBanner("");
     }
 
-    static void errorText() {
+    static void errorBanner() {
         consoleBanner("");
         consoleBanner("&c _______ ______  ______ _______ ______  ");
         consoleBanner("&c(_______|_____ \\(_____ (_______|_____ \\ ");
