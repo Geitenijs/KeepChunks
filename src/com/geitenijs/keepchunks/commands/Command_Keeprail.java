@@ -21,6 +21,11 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
             if (args[1].equalsIgnoreCase("current")) {
                 if (s instanceof Player) {
                     Location loc = ((Player) s).getLocation();
+                        loc.setX(loc.getBlockX());
+                        loc.setY(loc.getBlockY());
+                        loc.setZ(loc.getBlockZ());
+                        loc.setPitch(0.0f);
+                        loc.setYaw(0.0f);
                     Material m = loc.getBlock().getType();
                     boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
                     HashSet<Location> explored = new HashSet<>();
@@ -34,8 +39,8 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                         while (!agenda.isEmpty()) {
                             Location cur = agenda.peek();
                             agenda.remove();
-                            getAdjacent(cur, explored, agenda);
                             explored.add(cur);
+                            getAdjacent(cur, explored, agenda);
                             ++totalRails;
                         }
                         Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");
@@ -62,6 +67,11 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                     }
                     World realWorld = Bukkit.getWorld(world);
                     Location loc = new Location(realWorld, x, y, z);
+                        loc.setX(loc.getBlockX());
+                        loc.setY(loc.getBlockY());
+                        loc.setZ(loc.getBlockZ());
+                        loc.setPitch(0.0f);
+                        loc.setYaw(0.0f);
                     Material m = loc.getBlock().getType();
                     boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
                     HashSet<Location> explored = new HashSet<>();
@@ -75,8 +85,9 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                         while (!agenda.isEmpty()) {
                             Location cur = agenda.peek();
                             agenda.remove();
-                            getAdjacent(cur, explored, agenda);
                             explored.add(cur);
+
+                            getAdjacent(cur, explored, agenda);
                             ++totalRails;
                         }
                         Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");
