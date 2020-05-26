@@ -38,9 +38,9 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                         agenda.add(loc);
                         while (!agenda.isEmpty()) {
                             Location cur = agenda.peek();
+                            agenda.remove();
                             explored.add(cur);
                             getAdjacent(cur, explored, agenda);
-                            agenda.remove();
                             ++totalRails;
                         }
                         Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");
@@ -84,9 +84,9 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                         agenda.add(loc);
                         while (!agenda.isEmpty()) {
                             Location cur = agenda.peek();
+                            agenda.remove();
                             explored.add(cur);
                             getAdjacent(cur, explored, agenda);
-                            agenda.remove();
                             ++totalRails;
                         }
                         Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");

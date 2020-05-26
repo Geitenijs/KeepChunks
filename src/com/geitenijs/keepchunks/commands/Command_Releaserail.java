@@ -80,8 +80,8 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
                         while (!agenda.isEmpty()) {
                             Location cur = agenda.peek();
                             agenda.remove();
-                            getAdjacent(cur, explored, agenda);
                             explored.add(cur);
+                            getAdjacent(cur, explored, agenda);
                             ++totalRails;
                         }
                         Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");
