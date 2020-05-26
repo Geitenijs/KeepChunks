@@ -106,7 +106,7 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             Location candidate = new Location(pos.getWorld(), pos.getBlockX(), pos.getBlockY() + i, pos.getBlockZ() - 1);
             Material m = candidate.getBlock().getType();
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
-            if (isRail && !history.contains(candidate)) {
+            if (isRail && !history.contains(candidate) && !todo.contains(candidate)) {
                 if (Utilities.config.getBoolean("general.debug")) {
                     Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
                 }
@@ -121,7 +121,7 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             Location candidate = new Location(pos.getWorld(), pos.getBlockX() + 1, pos.getBlockY() + i, pos.getBlockZ());
             Material m = candidate.getBlock().getType();
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
-            if (isRail && !history.contains(candidate)) {
+            if (isRail && !history.contains(candidate) && !todo.contains(candidate)) {
                 if (Utilities.config.getBoolean("general.debug")) {
                     Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
                 }
@@ -136,7 +136,7 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             Location candidate = new Location(pos.getWorld(), pos.getBlockX(), pos.getBlockY() + i, pos.getBlockZ() + 1);
             Material m = candidate.getBlock().getType();
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
-            if (isRail && !history.contains(candidate)) {
+            if (isRail && !history.contains(candidate) && !todo.contains(candidate)) {
                 if (Utilities.config.getBoolean("general.debug")) {
                     Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
                 }
@@ -151,7 +151,7 @@ public class Command_Releaserail implements CommandExecutor, TabCompleter {
             Location candidate = new Location(pos.getWorld(), pos.getBlockX() - 1, pos.getBlockY() + i, pos.getBlockZ());
             Material m = candidate.getBlock().getType();
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
-            if (isRail && !history.contains(candidate)) {
+            if (isRail && !history.contains(candidate) && !todo.contains(candidate)) {
                 if (Utilities.config.getBoolean("general.debug")) {
                     Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
                 }
