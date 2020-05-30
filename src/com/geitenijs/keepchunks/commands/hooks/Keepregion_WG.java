@@ -51,7 +51,7 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
             for (int x = minX; x <= maxX; ++x) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     final String chunk = x + "#" + z + "#" + world;
-                    if (Utilities.chunks.contains(chunk) && Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (Utilities.chunks.contains(chunk)) {
                         if (Utilities.config.getBoolean("general.debug")) {
                             Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' is already marked.");
                         }

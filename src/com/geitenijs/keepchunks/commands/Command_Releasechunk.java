@@ -25,7 +25,7 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                     final int z = currentChunk.getZ();
                     final String world = currentChunk.getWorld().getName();
                     final String chunk = x + "#" + z + "#" + world;
-                    if (!Utilities.chunks.contains(chunk) && !Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (!Utilities.chunks.contains(chunk)) {
                         Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
                     } else {
                         if (Utilities.config.getBoolean("general.debug")) {
@@ -56,7 +56,7 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                         return false;
                     }
                     final String chunk = x + "#" + z + "#" + world;
-                    if (!Utilities.chunks.contains(chunk) && !Bukkit.getServer().getWorld(world).isChunkForceLoaded(x, z)) {
+                    if (!Utilities.chunks.contains(chunk)) {
                         Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
                     } else {
                         if (Utilities.config.getBoolean("general.debug")) {
