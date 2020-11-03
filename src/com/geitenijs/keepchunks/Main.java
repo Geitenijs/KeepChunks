@@ -9,7 +9,7 @@ public class Main extends JavaPlugin {
 
     public void onEnable() {
         Main.plugin = this;
-        if (version.contains("v1_16_R2") || version.contains("v1_16_R1") || version.contains("v1_15_R1") || version.contains("v1_14_R1") || version.contains("v1_13_R2")) {
+        if (version.contains("v1_16_R3") || version.contains("v1_16_R2") || version.contains("v1_16_R1") || version.contains("v1_15_R1") || version.contains("v1_14_R1") || version.contains("v1_13_R2")) {
             Utilities.pluginBanner();
             Hooks.registerHooks();
             Utilities.createConfigs();
