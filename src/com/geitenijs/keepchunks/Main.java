@@ -21,7 +21,7 @@ public class Main extends JavaPlugin {
             Utilities.done();
         } else {
             Utilities.errorBanner();
-            Utilities.consoleMsg("&cYour server version is not compatible with this release of " + Strings.PLUGIN + ". Supported versions are: 1.17, 1.16, 1.15, 1.14 and 1.13.2. You can download other releases at: " + Strings.WEBSITE);
+            Utilities.consoleMsg("&cYour server version is not compatible with this release of " + Strings.PLUGIN + ". Supported versions are: 1.18, 1.17, 1.16, 1.15, 1.14 and 1.13.2. You can download other releases at: " + Strings.WEBSITE);
             getServer().getPluginManager().disablePlugin(Main.plugin);
         }
     }
