@@ -48,17 +48,6 @@ public class Utilities {
         consoleBanner("");
     }
 
-    static void errorBanner() {
-        consoleBanner("");
-        consoleBanner("&c _______ ______  ______ _______ ______  ");
-        consoleBanner("&c(_______|_____ \\(_____ (_______|_____ \\ ");
-        consoleBanner("&c _____   _____) )_____) )     _ _____) )");
-        consoleBanner("&c|  ___) |  __  /|  __  / |   | |  __  / ");
-        consoleBanner("&c| |_____| |  \\ \\| |  \\ \\ |___| | |  \\ \\ ");
-        consoleBanner("&c|_______)_|   |_|_|   |_\\_____/|_|   |_|");
-        consoleBanner("");
-    }
-
     static void createConfigs() {
         config.options().header(Strings.ASCIILOGO
                 + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
