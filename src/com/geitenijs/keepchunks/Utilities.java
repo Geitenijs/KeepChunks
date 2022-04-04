@@ -37,15 +37,17 @@ public class Utilities {
     }
 
     static void pluginBanner() {
-        consoleBanner("");
-        consoleBanner("&2 _     _                  &8 _______ _                 _          ");
-        consoleBanner("&2(_)   | |                 &8(_______) |               | |  &2v" + Strings.VERSION);
-        consoleBanner("&2 _____| |_____ _____ ____ &8 _      | |__  _   _ ____ | |  _  ___ ");
-        consoleBanner("&2|  _   _) ___ | ___ |  _ \\&8| |     |  _ \\| | | |  _ \\| |_/ )/___)");
-        consoleBanner("&2| |  \\ \\| ____| ____| |_| &8| |_____| | | | |_| | | | |  _ (|___ |");
-        consoleBanner("&2|_|   \\_)_____)_____)  __/&8 \\______)_| |_|____/|_| |_|_| \\_|___/ ");
-        consoleBanner("&2                    |_|   &8                                      ");
-        consoleBanner("");
+        if (config.getBoolean("general.pluginbanner")) {
+            consoleBanner("");
+            consoleBanner("&2 _     _                  &8 _______ _                 _          ");
+            consoleBanner("&2(_)   | |                 &8(_______) |               | |  &2v" + Strings.VERSION);
+            consoleBanner("&2 _____| |_____ _____ ____ &8 _      | |__  _   _ ____ | |  _  ___ ");
+            consoleBanner("&2|  _   _) ___ | ___ |  _ \\&8| |     |  _ \\| | | |  _ \\| |_/ )/___)");
+            consoleBanner("&2| |  \\ \\| ____| ____| |_| &8| |_____| | | | |_| | | | |  _ (|___ |");
+            consoleBanner("&2|_|   \\_)_____)_____)  __/&8 \\______)_| |_|____/|_| |_|_| \\_|___/ ");
+            consoleBanner("&2                    |_|   &8                                      ");
+            consoleBanner("");
+        }
     }
 
     static void createConfigs() {
