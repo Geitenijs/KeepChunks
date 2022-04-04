@@ -53,23 +53,19 @@ public class Utilities {
                 + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
                 "\nInformation & Support: " + Strings.WEBSITE
                 + "\n\ngeneral:"
+                + "\n  pluginbanner: Whether or not to display the fancy banner in your console on server startup."
                 + "\n  colourfulconsole: Console messages will be coloured when this is enabled."
                 + "\n  debug: When set to true, the plugin will log more information to the console."
                 + "\n  releaseallprotection: Do you want to restrict the 'release all' command to the console?"
                 + "\nupdates:"
                 + "\n  check: When enabled, the plugin will check for updates. No automatic downloads, just a subtle notification in the console."
                 + "\n  notify: Would you like to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'.");
+        config.addDefault("general.pluginbanner", true);
         config.addDefault("general.colourfulconsole", true);
         config.addDefault("general.debug", false);
         config.addDefault("general.releaseallprotection", true);
         config.addDefault("updates.check", true);
         config.addDefault("updates.notify", true);
-        config.set("chunkload.dynamic", null);
-        config.set("chunkload.onstartup", null);
-        config.set("chunkload.onworldload", null);
-        config.set("chunkload.all", null);
-        config.set("chunkload.force", null);
-        config.set("chunkload", null);
         data.options().header(Strings.ASCIILOGO
                 + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
                 "\nInformation & Support: " + Strings.WEBSITE
@@ -141,6 +137,7 @@ public class Utilities {
             }
             return Bukkit.getServer().getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
         }));
+        metrics.addCustomChart(new Metrics.SimplePie("pluginBannerEnabled", () -> config.getString("general.pluginbanner")));
         metrics.addCustomChart(new Metrics.SimplePie("colourfulConsoleEnabled", () -> config.getString("general.colourfulconsole")));
         metrics.addCustomChart(new Metrics.SimplePie("debugEnabled", () -> config.getString("general.debug")));
         metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
