@@ -52,7 +52,7 @@ public class Utilities {
 
     static void createConfigs() {
         config.options().header(Strings.ASCIILOGO
-                + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
+                + "Keeping your chunks loaded since 2015! By " + Strings.AUTHOR +
                 "\nInformation & Support: " + Strings.WEBSITE
                 + "\n\ngeneral:"
                 + "\n  pluginbanner: Whether or not to display the fancy banner in your console on server startup."
@@ -69,7 +69,7 @@ public class Utilities {
         config.addDefault("updates.check", true);
         config.addDefault("updates.notify", true);
         data.options().header(Strings.ASCIILOGO
-                + "Copyright © " + Strings.COPYRIGHT + " " + Strings.AUTHOR + ", all rights reserved." +
+                + "Keeping your chunks loaded since 2015! By " + Strings.AUTHOR +
                 "\nInformation & Support: " + Strings.WEBSITE
                 + "\n\nUnless you know what you're doing, it's best not to touch this file. All configurable options can be found in config.yml");
         data.addDefault("chunks", new ArrayList<>());
