@@ -1,6 +1,7 @@
 package com.geitenijs.keepchunks.service;
 
 import com.geitenijs.keepchunks.entity.Chunk;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -14,6 +15,7 @@ public class DatabaseService {
     private static DatabaseService INSTANCE = null;
     private FileSystemService fileSystemService = FileSystemService.getInstance();
     private PluginConfigurationService configurationService;
+    @Getter
     private Set<Chunk> chunks = new HashSet<>();
 
     private DatabaseService() {
