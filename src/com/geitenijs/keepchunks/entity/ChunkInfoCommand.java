@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChunkInfoCommand extends KeepChunkCommand{
+public class ChunkInfoCommand extends KeepChunkBaseCommand {
     private CommandExecutor WEChunkinfo;
     private CommandExecutor WGChunkinfo;
     private TabCompleter WEChunkinfoTab;
@@ -44,9 +44,9 @@ public class ChunkInfoCommand extends KeepChunkCommand{
         }
         //TODO: Add WG/WE Hook checks to these bools
         final boolean userGaveCurrentLocation = args.length == 2 && args[1].equalsIgnoreCase("current") && s instanceof Player;
+        final boolean userGaveCoords = args.length == 5 && args[1].equalsIgnoreCase("coords");
         final boolean usingWorldEdit = args.length == 2 && args[1].equalsIgnoreCase("worldedit");
         final boolean usingWorldGuard = args.length == 4 && args[1].equalsIgnoreCase("worldguard");
-        final boolean userGaveCoords = args.length == 5 && args[1].equalsIgnoreCase("coords");
 
         if(userGaveCurrentLocation){
             final Location currentLocation = ((Entity) s).getLocation();
@@ -54,7 +54,7 @@ public class ChunkInfoCommand extends KeepChunkCommand{
             final int chunkX = currentChunk.getX();
             final int chunkZ = currentChunk.getZ();
             final World world = currentChunk.getWorld();
-            final com.geitenijs.keepchunks.entity.Chunk chunk = new com.geitenijs.keepchunks.entity.Chunk(x, z, world);
+            final com.geitenijs.keepchunks.entity.Chunk chunk = new com.geitenijs.keepchunks.entity.Chunk(chunkX,chunkZ, world.getName());
 
             //Generate chunk information message
             final String chunkInfoMsg = String.format(
@@ -81,8 +81,7 @@ public class ChunkInfoCommand extends KeepChunkCommand{
         }
 
         if(userGaveCoords){
-            final String chunkString = String.format("{}#{}#{}",args[2], args[3], args[4]);
-            final String[] validChunk = DatabaseService.validateChunkString(chunkString);
+            final String chunkString = String.format("{}#{}#{}",args[2], args[3], args[4]);            final String[] validChunk = DatabaseService.validateChunkString(chunkString);
 
             if(validChunk == null){
                 //TODO: Print error message
