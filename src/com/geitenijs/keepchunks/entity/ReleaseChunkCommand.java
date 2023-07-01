@@ -4,7 +4,6 @@ import com.geitenijs.keepchunks.commands.CommandWrapper;
 import com.geitenijs.keepchunks.service.DatabaseService;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -14,8 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class KeepChunkCommand extends KeepChunkBaseCommand{
-    @Override
+public class ReleaseChunkCommand extends KeepChunkBaseCommand{
     public boolean onCommand(CommandSender s, Command c, String label, String[] args) {
         final boolean userGaveCurrentLocation = args.length == 2 && args[1].equalsIgnoreCase("current") && s instanceof Player;
         final boolean userGaveCoords = args.length == 5 && args[1].equalsIgnoreCase("coords");
@@ -25,14 +23,14 @@ public class KeepChunkCommand extends KeepChunkBaseCommand{
             final Chunk currentChunk = currentLocation.getChunk();
             final String chunkString = String.format("{}#{}#{}", currentChunk.getX(),currentChunk.getZ(),currentChunk.getWorld());
 
-            DatabaseService.getInstance().markChunks(Arrays.asList(chunkString));
+            DatabaseService.getInstance().unmarkChunks(Arrays.asList(chunkString));
             //TODO: Print success to user
             return true;
         }
 
         if (userGaveCoords) {
-            final String chunkString = String.format("{}#{}#{}",args[2], args[3], args[4]);
-            DatabaseService.getInstance().markChunks(Arrays.asList(chunkString));
+            final String chunkString = String.format("{}#{}#{}", args[2], args[3], args[4]);
+            DatabaseService.getInstance().unmarkChunks(Arrays.asList(chunkString));
             //TODO: Print success to user
             return true;
         }
