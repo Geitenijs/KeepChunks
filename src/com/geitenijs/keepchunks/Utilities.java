@@ -22,12 +22,12 @@ public class Utilities {
 
     public static FileConfiguration config;
     public static FileConfiguration data;
+    public static HashSet<String> chunks;
+    public static HashSet<String> chunkloadAll;
     private static File configFile = new File(Main.plugin.getDataFolder(), "config.yml");
     private static File dataFile = new File(Main.plugin.getDataFolder(), "data.yml");
     private static boolean updateAvailable;
     private static String updateVersion;
-    public static HashSet<String> chunks;
-    public static HashSet<String> chunkloadAll;
 
     static {
         config = YamlConfiguration.loadConfiguration(new File(Main.plugin.getDataFolder(), "config.yml"));
@@ -125,26 +125,28 @@ public class Utilities {
     static void startMetrics() {
         Metrics metrics = new Metrics(Main.plugin);
         metrics.addCustomChart(new Metrics.SingleLineChart("loadedChunks", () -> chunks.size()));
-        metrics.addCustomChart(new Metrics.SimplePie("worldeditVersion", () -> {
-            final Plugin p = Bukkit.getPluginManager().getPlugin("WorldEdit");
-            if (!(p instanceof WorldEditPlugin)) {
-                return Strings.NOSTAT;
-            }
-            return Bukkit.getServer().getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
-        }));
-        metrics.addCustomChart(new Metrics.SimplePie("worldguardVersion", () -> {
-            final Plugin p = Bukkit.getPluginManager().getPlugin("WorldGuard");
-            if (!(p instanceof WorldGuardPlugin)) {
-                return Strings.NOSTAT;
-            }
-            return Bukkit.getServer().getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
-        }));
         metrics.addCustomChart(new Metrics.SimplePie("pluginBannerEnabled", () -> config.getString("general.pluginbanner")));
         metrics.addCustomChart(new Metrics.SimplePie("colourfulConsoleEnabled", () -> config.getString("general.colourfulconsole")));
         metrics.addCustomChart(new Metrics.SimplePie("debugEnabled", () -> config.getString("general.debug")));
         metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
         metrics.addCustomChart(new Metrics.SimplePie("updateCheckEnabled", () -> config.getString("updates.check")));
         metrics.addCustomChart(new Metrics.SimplePie("updateNotificationEnabled", () -> config.getString("updates.notify")));
+        metrics.addCustomChart(new Metrics.SimplePie("worldeditVersion", () -> {
+            final Plugin p = Bukkit.getPluginManager().getPlugin("WorldEdit");
+            if (!(p instanceof WorldEditPlugin)) {
+                return Strings.NOSTAT;
+            } else {
+                return Bukkit.getServer().getPluginManager().getPlugin("WorldEdit").getDescription().getVersion();
+            }
+        }));
+        metrics.addCustomChart(new Metrics.SimplePie("worldguardVersion", () -> {
+            final Plugin p = Bukkit.getPluginManager().getPlugin("WorldGuard");
+            if (!(p instanceof WorldGuardPlugin)) {
+                return Strings.NOSTAT;
+            } else {
+                return Bukkit.getServer().getPluginManager().getPlugin("WorldGuard").getDescription().getVersion();
+            }
+        }));
     }
 
     static void done() {
@@ -165,11 +167,15 @@ public class Utilities {
                                 updateAvailable = true;
                                 break;
                             case LATEST:
-                                consoleMsg("You are running the latest version.");
+                                if (config.getBoolean("general.debug")) {
+                                    consoleMsg(Strings.DEBUGPREFIX + "You are running the latest version.");
+                                }
                                 updateAvailable = false;
                                 break;
                             case UNAVAILABLE:
-                                consoleMsg("An error occurred while checking for updates.");
+                                if (config.getBoolean("general.debug")) {
+                                    consoleMsg(Strings.DEBUGPREFIX + "An error occurred while checking for updates.");
+                                }
                                 updateAvailable = false;
                         }
                     }).check();

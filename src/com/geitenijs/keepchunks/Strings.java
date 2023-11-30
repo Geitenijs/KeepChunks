@@ -10,7 +10,7 @@ public class Strings {
     public static final String AUTHOR = "Geitenijs";
     static final int RESOURCEID = 23307;
     static final String WEBSITE = "https://www.spigotmc.org/resources/" + Strings.RESOURCEID;
-    static final String ASCIILOGO = "" +
+    static final String ASCIILOGO =
             "\n _     _                   _______ _                 _          " +
             "\n(_)   | |                 (_______) |               | |  v" + Strings.VERSION +
             "\n _____| |_____ _____ ____  _      | |__  _   _ ____ | |  _  ___ " +
