@@ -23,7 +23,7 @@ public class UpdateCheck {
 
     private final JavaPlugin javaPlugin;
 
-    private String currentVersion;
+    private final String currentVersion;
     private int resourceId = -1;
     private BiConsumer<VersionResponse, String> versionResponse;
 
@@ -58,7 +58,6 @@ public class UpdateCheck {
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.setRequestProperty(HttpHeaders.USER_AGENT, "Mozilla/5.0");
 
-                //noinspection UnstableApiUsage
                 String fetchedVersion = Resources.toString(httpURLConnection.getURL(), Charset.defaultCharset());
 
                 boolean latestVersion = fetchedVersion.equalsIgnoreCase(this.currentVersion);
