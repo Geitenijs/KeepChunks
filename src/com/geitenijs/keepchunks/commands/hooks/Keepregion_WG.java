@@ -7,6 +7,8 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -22,11 +24,14 @@ import java.util.List;
 
 public class Keepregion_WG implements CommandExecutor, TabCompleter {
 
+    int totalChunks = 0;
+
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
+        totalChunks = 0;
         final String region = args[2];
         final String world = args[3];
         if (Bukkit.getWorld(world) == null) {
-            Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+            Utilities.msg(s, Strings.IGPREFIX + "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
             return false;
         }
         World realWorld = Bukkit.getWorld(world);
@@ -35,7 +40,7 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
         RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(weWorld);
         assert manager != null;
         if (manager.getRegion(region) == null) {
-            Utilities.msg(s, "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
+            Utilities.msg(s, Strings.IGPREFIX + "&cRegion &f'" + region + "'&c doesn't exist, or is invalid.");
         } else {
             BlockVector3 max = manager.getRegion(region).getMaximumPoint();
             BlockVector3 min = manager.getRegion(region).getMinimumPoint();
@@ -47,28 +52,26 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
             final int maxX = chunkMax.getX();
             final int minX = chunkMin.getX();
             final int minZ = chunkMin.getZ();
-            Utilities.msg(s, "&fMarking chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
+            Utilities.msg(s, Strings.IGPREFIX + "&7&oMarking chunks between &9&o(" + minX + ", " + minZ + ")&7&o & &9&o(" + maxX + ", " + maxZ + ")&7&o in &6&o'" + world + "'&7&o...");
             for (int x = minX; x <= maxX; ++x) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     final String chunk = x + "#" + z + "#" + world;
-                    if (Utilities.chunks.contains(chunk)) {
-                        if (Utilities.config.getBoolean("general.debug")) {
-                            Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' is already marked.");
-                        }
-                    } else {
-                        if (Utilities.config.getBoolean("general.debug")) {
-                            Utilities.consoleMsg(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
-                        }
+                    if (!Utilities.chunks.contains(chunk)) {
+                        ++totalChunks;
                         Utilities.chunks.add(chunk);
                         Bukkit.getServer().getWorld(world).loadChunk(x, z);
                         Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
                     }
                 }
             }
+            if (totalChunks == 0) {
+                Utilities.msg(s, Strings.IGPREFIX + "&cEvery chunk within your region was already marked.");
+                return true;
+            }
             Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
             Utilities.saveDataFile();
             Utilities.reloadDataFile();
-            Utilities.msg(s, "&fMarked chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
+            Utilities.msg(s, Strings.IGPREFIX + "&fSuccessfully marked a total of &9" + totalChunks + "&f chunks!");
         }
         return true;
     }
@@ -76,16 +79,28 @@ public class Keepregion_WG implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
         String[] newArgs = CommandWrapper.getArgs(args);
-        if (newArgs.length == 2) {
-            tabs.add("<region>");
-        }
-        if (s instanceof Player) {
-            Player player = (Player) s;
-            Location loc = player.getLocation();
+        if (s instanceof Player player) {
+            if (newArgs.length == 2) {
+                RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                RegionManager regionManager = container.get(BukkitAdapter.adapt(player.getWorld()));
+                if (regionManager != null) {
+                    if (!regionManager.getRegions().isEmpty()) {
+                        for (ProtectedRegion region : regionManager.getRegions().values()) {
+                            tabs.add(region.getId());
+                        }
+                    } else {
+                        tabs.add("<region>");
+                    }
+                }
+            }
             if (newArgs.length == 3) {
+                Location loc = player.getLocation();
                 tabs.add(loc.getWorld().getName());
             }
         } else {
+            if (newArgs.length == 2) {
+                tabs.add("<region>");
+            }
             if (newArgs.length == 3) {
                 tabs.add("<world>");
             }

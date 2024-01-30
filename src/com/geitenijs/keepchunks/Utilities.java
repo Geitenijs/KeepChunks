@@ -15,7 +15,9 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 
 public class Utilities {
@@ -51,31 +53,41 @@ public class Utilities {
     }
 
     static void createConfigs() {
-        config.options().header(Strings.ASCIILOGO
-                + "Keeping your chunks loaded since 2015! By " + Strings.AUTHOR +
-                "\nInformation & Support: " + Strings.WEBSITE
-                + "\n\ngeneral:"
-                + "\n  pluginbanner: Whether or not to display the fancy banner in your console on server startup."
-                + "\n  colourfulconsole: Console messages will be coloured when this is enabled."
-                + "\n  debug: When set to true, the plugin will log more information to the console."
-                + "\n  releaseallprotection: Do you want to restrict the 'release all' command to the console?"
-                + "\nupdates:"
-                + "\n  check: When enabled, the plugin will check for updates. No automatic downloads, just a subtle notification in the console."
-                + "\n  notify: Would you like to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'.");
+        List<String> configComments = new ArrayList<>();
+        configComments.addAll(Strings.ASCIILOGO);
+        configComments.addAll(Arrays.asList(
+                "Keeping your chunks loaded since 2015! By " + Strings.AUTHOR,
+                "Information & Support: " + Strings.WEBSITE,
+                "",
+                "general:",
+                "  pluginbanner: Whether or not to display the fancy banner in your console on server startup.",
+                "  colourfulconsole: Console messages will be coloured when this is enabled.",
+                "  releaseallprotection: Do you want to restrict the 'release all' command to the console?",
+                "",
+                "updates:",
+                "  check: When enabled, the plugin will check for updates. No automatic downloads, just a subtle notification in the console.",
+                "  notify: Would you like to get an in-game reminder of a new update? Requires permission 'keepchunks.notify.update'."
+        ));
+        config.options().setHeader(configComments);
+        config.set("general.debug", null);
         config.addDefault("general.pluginbanner", true);
         config.addDefault("general.colourfulconsole", true);
-        config.addDefault("general.debug", false);
         config.addDefault("general.releaseallprotection", true);
         config.addDefault("updates.check", true);
         config.addDefault("updates.notify", true);
-        data.options().header(Strings.ASCIILOGO
-                + "Keeping your chunks loaded since 2015! By " + Strings.AUTHOR +
-                "\nInformation & Support: " + Strings.WEBSITE
-                + "\n\nUnless you know what you're doing, it's best not to touch this file. All configurable options can be found in config.yml");
+        List<String> dataComments = new ArrayList<>();
+        dataComments.addAll(Strings.ASCIILOGO);
+        dataComments.addAll(Arrays.asList(
+                "Keeping your chunks loaded since 2015! By " + Strings.AUTHOR,
+                "Information & Support: " + Strings.WEBSITE,
+                "",
+                "Unless you know what you're doing, it's best not to touch this file. All configurable options can be found in config.yml"
+        ));
+        data.options().setHeader(dataComments);
         data.addDefault("chunks", new ArrayList<>());
-        config.options().copyHeader(true);
+        config.options().parseComments(true);
         config.options().copyDefaults(true);
-        data.options().copyHeader(true);
+        data.options().parseComments(true);
         data.options().copyDefaults(true);
         saveConfigFile();
         reloadConfigFile();
@@ -100,16 +112,11 @@ public class Utilities {
             final int x = Integer.parseInt(chunkCoordinates[0]);
             final int z = Integer.parseInt(chunkCoordinates[1]);
             final String world = chunkCoordinates[2];
-            if (config.getBoolean("general.debug")) {
-                consoleMsg(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
-            }
             try {
                 Bukkit.getServer().getWorld(world).loadChunk(x, z);
                 Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
             } catch (NullPointerException ex) {
-                if (config.getBoolean("general.debug")) {
-                    consoleMsg(Strings.DEBUGPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
-                }
+                consoleMsg(Strings.INTERNALPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
             }
         }
     }
@@ -127,7 +134,6 @@ public class Utilities {
         metrics.addCustomChart(new Metrics.SingleLineChart("loadedChunks", () -> chunks.size()));
         metrics.addCustomChart(new Metrics.SimplePie("pluginBannerEnabled", () -> config.getString("general.pluginbanner")));
         metrics.addCustomChart(new Metrics.SimplePie("colourfulConsoleEnabled", () -> config.getString("general.colourfulconsole")));
-        metrics.addCustomChart(new Metrics.SimplePie("debugEnabled", () -> config.getString("general.debug")));
         metrics.addCustomChart(new Metrics.SimplePie("releaseallProtectionEnabled", () -> config.getString("general.releaseallprotection")));
         metrics.addCustomChart(new Metrics.SimplePie("updateCheckEnabled", () -> config.getString("updates.check")));
         metrics.addCustomChart(new Metrics.SimplePie("updateNotificationEnabled", () -> config.getString("updates.notify")));
@@ -167,15 +173,9 @@ public class Utilities {
                                 updateAvailable = true;
                                 break;
                             case LATEST:
-                                if (config.getBoolean("general.debug")) {
-                                    consoleMsg(Strings.DEBUGPREFIX + "You are running the latest version.");
-                                }
                                 updateAvailable = false;
                                 break;
                             case UNAVAILABLE:
-                                if (config.getBoolean("general.debug")) {
-                                    consoleMsg(Strings.DEBUGPREFIX + "An error occurred while checking for updates.");
-                                }
                                 updateAvailable = false;
                         }
                     }).check();

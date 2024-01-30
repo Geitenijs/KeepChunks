@@ -25,7 +25,10 @@ import java.util.List;
 
 public class Releaseregion_WE implements CommandExecutor, TabCompleter {
 
+    int totalChunks = 0;
+
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
+        totalChunks = 0;
         if (s instanceof Player) {
             try {
                 Player player = ((OfflinePlayer) s).getPlayer();
@@ -44,27 +47,25 @@ public class Releaseregion_WE implements CommandExecutor, TabCompleter {
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
                 final String world = sel.getWorld().getName();
-                Utilities.msg(s, "&fReleasing chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
+                Utilities.msg(s, Strings.IGPREFIX + "&7&oReleasing chunks between &9&o(" + minX + ", " + minZ + ")&7&o & &9&o(" + maxX + ", " + maxZ + ")&7&o in &6&o'" + world + "'&7&o...");
                 for (int x = minX; x <= maxX; ++x) {
                     for (int z = minZ; z <= maxZ; ++z) {
                         final String chunk = x + "#" + z + "#" + world;
-                        if (!Utilities.chunks.contains(chunk)) {
-                            if (Utilities.config.getBoolean("general.debug")) {
-                                Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' isn't marked.");
-                            }
-                        } else {
-                            if (Utilities.config.getBoolean("general.debug")) {
-                                Utilities.consoleMsg(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
-                            }
+                        if (Utilities.chunks.contains(chunk)) {
+                            ++totalChunks;
                             Utilities.chunks.remove(chunk);
                             Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                         }
                     }
                 }
+                if (totalChunks == 0) {
+                    Utilities.msg(s, Strings.IGPREFIX + "&cNo chunk within your region was already marked.");
+                    return true;
+                }
                 Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                 Utilities.saveDataFile();
                 Utilities.reloadDataFile();
-                Utilities.msg(s, "&fReleased chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
+                Utilities.msg(s, Strings.IGPREFIX + "&fSuccessfully released a total of &9" + totalChunks + "&f chunks!");
             } catch (IncompleteRegionException e) {
                 Utilities.msg(s, Strings.WEFIRST);
             }

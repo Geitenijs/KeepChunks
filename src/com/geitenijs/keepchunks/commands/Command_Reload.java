@@ -18,11 +18,11 @@ public class Command_Reload implements CommandExecutor, TabCompleter {
             Utilities.reloadConfigFile();
             Utilities.reloadDataFile();
             Hooks.registerHooks();
-            Utilities.msg(s, "&aConfiguration file & hooks have been reloaded successfully.");
+            Utilities.msg(s, Strings.IGPREFIX + "&aThe configuration file has been reloaded.");
             if (!Utilities.chunks.isEmpty()) {
-                Utilities.msg(s, "&7&oReloading all chunks...");
+                Utilities.msg(s, Strings.IGPREFIX + "&7&oReloading all chunks...");
                 Utilities.loadChunks();
-                Utilities.msg(s, "&aAll &f" + Utilities.chunks.size() + "&a chunks have been reloaded successfully ");
+                Utilities.msg(s, Strings.IGPREFIX + "&aAll &f" + Utilities.chunks.size() + "&a chunks have been reloaded.");
             }
         } else {
             Utilities.msg(s, Strings.RELOADUSAGE);

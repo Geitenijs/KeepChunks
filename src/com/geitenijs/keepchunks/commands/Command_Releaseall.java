@@ -23,9 +23,9 @@ public class Command_Releaseall implements CommandExecutor, TabCompleter {
                 }
             }
             if (Utilities.chunks.isEmpty()) {
-                Utilities.msg(s, "&cThere don't seem to be any marked chunks.");
+                Utilities.msg(s, Strings.IGPREFIX + "&cThere don't seem to be any marked chunks.");
             } else {
-                Utilities.msg(s, "&7&oReleasing all chunks...");
+                Utilities.msg(s, Strings.IGPREFIX + "&7&oReleasing all chunks...");
                 int totalChunks = Utilities.chunks.size();
                 for (final String chunk : Utilities.chunks) {
                     final String[] chunkCoordinates = chunk.split("#");
@@ -38,7 +38,7 @@ public class Command_Releaseall implements CommandExecutor, TabCompleter {
                 Utilities.data.set("chunks", new ArrayList<>());
                 Utilities.saveDataFile();
                 Utilities.reloadDataFile();
-                Utilities.msg(s, "&aAll &f" + totalChunks + "&a marked chunks have been released.");
+                Utilities.msg(s, Strings.IGPREFIX + "&aAll &f" + totalChunks + "&a marked chunks have been released.");
             }
         } else {
             Utilities.msg(s, Strings.RELEASEALLUSAGE);

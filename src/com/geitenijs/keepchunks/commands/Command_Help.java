@@ -14,6 +14,7 @@ public class Command_Help implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
         if (args.length == 1) {
+            Utilities.msg(s, Strings.LINE);
             Utilities.msg(s, "&8/&akc help  &7-&f  Shows this list");
             Utilities.msg(s, "&8/&akc reload  &7-&f  Reload the plugin");
             Utilities.msg(s, "&8/&akc list  &7-&f  List all marked chunks");
@@ -25,6 +26,7 @@ public class Command_Help implements CommandExecutor, TabCompleter {
             Utilities.msg(s, "&8/&akc releasechunk  &7-&f  Release a single chunk");
             Utilities.msg(s, "&8/&akc releaseregion  &7-&f  Release multiple chunks");
             Utilities.msg(s, "&8/&akc releaserail  &7-&f  Release a railroad");
+            Utilities.msg(s, Strings.LINE);
         } else {
             Utilities.msg(s, Strings.HELPUSAGE);
         }

@@ -160,7 +160,7 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
                     Utilities.msg(s, Strings.NOPERM);
                 }
             } else {
-                Utilities.msg(s, Strings.GAMEPREFIX + "&cThat command does not exist.");
+                Utilities.msg(s, Strings.IGPREFIX + "&cThat command does not exist.");
             }
         }
         return true;

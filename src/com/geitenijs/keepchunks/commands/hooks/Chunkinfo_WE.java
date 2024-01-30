@@ -24,7 +24,10 @@ import java.util.List;
 
 public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
 
+    int totalChunks = 0;
+
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
+        totalChunks = 0;
         if (s instanceof Player) {
             try {
                 Player player = ((OfflinePlayer) s).getPlayer();
@@ -47,11 +50,17 @@ public class Chunkinfo_WE implements CommandExecutor, TabCompleter {
                 final int minX = chunkMin.getX();
                 final int minZ = chunkMin.getZ();
                 final String world = sel.getWorld().getName();
-                Utilities.msg(s, "&7---");
-                Utilities.msg(s, "&fWorldEdit selection: &c(" + minPointX + ", " + minPointZ + ") (" + maxPointX + ", " + maxPointZ + ")");
+                for (int x = minX; x <= maxX; ++x) {
+                    for (int z = minZ; z <= maxZ; ++z) {
+                        ++totalChunks;
+                    }
+                }
+                Utilities.msg(s, Strings.LINE);
+                Utilities.msg(s, "&fWorldEdit region: &c(" + minPointX + ", " + minPointZ + ") (" + maxPointX + ", " + maxPointZ + ")");
                 Utilities.msg(s, "&fChunk coords: &9(" + minX + ", " + minZ + ") (" + maxX + ", " + maxZ + ")");
                 Utilities.msg(s, "&fWorld: &6" + world);
-                Utilities.msg(s, "&7---");
+                Utilities.msg(s, "&fTotal amount of chunks: &c" + totalChunks);
+                Utilities.msg(s, Strings.LINE);
             } catch (IncompleteRegionException e) {
                 Utilities.msg(s, Strings.WEFIRST);
             }

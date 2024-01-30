@@ -21,6 +21,7 @@ import static java.lang.Integer.min;
 
 public class Command_Keepregion implements CommandExecutor, TabCompleter {
 
+    int totalChunks = 0;
     private CommandExecutor WEKeepregion;
     private CommandExecutor WGKeepregion;
     private TabCompleter WEKeepregionTab;
@@ -38,12 +39,11 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
     }
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
+        totalChunks = 0;
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("worldedit")) {
                 if (Hooks.WorldEdit) {
                     return WEKeepregion.onCommand(s, c, label, args);
-                } else if (Hooks.incompatibleWorldEdit) {
-                    Utilities.msg(s, Strings.UPDATEWE);
                 } else {
                     Utilities.msg(s, Strings.NOWE);
                 }
@@ -54,8 +54,6 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
             if (args[1].equalsIgnoreCase("worldguard")) {
                 if (Hooks.WorldGuard) {
                     return WGKeepregion.onCommand(s, c, label, args);
-                } else if (Hooks.incompatibleWorldGuard) {
-                    Utilities.msg(s, Strings.UPDATEWG);
                 } else {
                     Utilities.msg(s, Strings.NOWG);
                 }
@@ -75,31 +73,29 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
                     final int maxZ = max(Z1, Z2);
                     final String world = args[6];
                     if (Bukkit.getWorld(world) == null) {
-                        Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
                         return false;
                     }
-                    Utilities.msg(s, "&fMarking chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f...");
+                    Utilities.msg(s, Strings.IGPREFIX + "&7&oMarking chunks between &9&o(" + minX + ", " + minZ + ")&7&o & &9&o(" + maxX + ", " + maxZ + ")&7&o in &6&o'" + world + "'&7&o...");
                     for (int x = minX; x <= maxX; ++x) {
                         for (int z = minZ; z <= maxZ; ++z) {
                             final String chunk = x + "#" + z + "#" + world;
-                            if (Utilities.chunks.contains(chunk)) {
-                                if (Utilities.config.getBoolean("general.debug")) {
-                                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + x + "," + z + ") in world '" + world + "' is already marked.");
-                                }
-                            } else {
-                                if (Utilities.config.getBoolean("general.debug")) {
-                                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
-                                }
+                            if (!Utilities.chunks.contains(chunk)) {
+                                ++totalChunks;
                                 Utilities.chunks.add(chunk);
                                 Bukkit.getServer().getWorld(world).loadChunk(x, z);
                                 Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
                             }
                         }
                     }
+                    if (totalChunks == 0) {
+                        Utilities.msg(s, Strings.IGPREFIX + "&cEvery chunk within your region was already marked.");
+                        return true;
+                    }
                     Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                     Utilities.saveDataFile();
                     Utilities.reloadDataFile();
-                    Utilities.msg(s, "&fMarked chunks between &9(" + minX + ", " + minZ + ")&f and &9(" + maxX + ", " + maxZ + ")&f in world &6'" + world + "'&f.");
+                    Utilities.msg(s, Strings.IGPREFIX + "&fSuccessfully marked a total of &9" + totalChunks + "&f chunks!");
                 } catch (NumberFormatException ex) {
                     Utilities.msg(s, Strings.UNUSABLE);
                 }
@@ -121,8 +117,7 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
             tabs.add("worldguard");
         }
         if (args[1].equals("coords")) {
-            if (s instanceof Player) {
-                Player player = (Player) s;
+            if (s instanceof Player player) {
                 Location loc = player.getLocation();
                 if (Hooks.WorldEdit) {
                     return WEKeepregionTab.onTabComplete(s, c, label, args);
@@ -149,16 +144,16 @@ public class Command_Keepregion implements CommandExecutor, TabCompleter {
                 }
             } else {
                 if (newArgs.length == 2) {
-                    tabs.add("<0>");
+                    tabs.add("<x1>");
                 }
                 if (newArgs.length == 3) {
-                    tabs.add("<0>");
+                    tabs.add("<z1>");
                 }
                 if (newArgs.length == 4) {
-                    tabs.add("<0>");
+                    tabs.add("<x2>");
                 }
                 if (newArgs.length == 5) {
-                    tabs.add("<0>");
+                    tabs.add("<z2>");
                 }
                 if (newArgs.length == 6) {
                     tabs.add("<world>");

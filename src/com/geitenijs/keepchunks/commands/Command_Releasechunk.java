@@ -26,17 +26,14 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                     final String world = currentChunk.getWorld().getName();
                     final String chunk = x + "#" + z + "#" + world;
                     if (!Utilities.chunks.contains(chunk)) {
-                        Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&cChunk &f(" + x + ", " + z + ")&c in &f'" + world + "'&c isn't marked.");
                     } else {
-                        if (Utilities.config.getBoolean("general.debug")) {
-                            Utilities.consoleMsg(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
-                        }
                         Utilities.chunks.remove(chunk);
                         Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                         Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();
-                        Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&fReleased chunk &9(" + x + ", " + z + ")&f in &6'" + world + "'&f.");
                     }
                 } else {
                     Utilities.msg(s, Strings.ONLYPLAYER);
@@ -52,22 +49,19 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                     final int z = Integer.parseInt(args[3]);
                     final String world = args[4];
                     if (Bukkit.getWorld(world) == null) {
-                        Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
                         return false;
                     }
                     final String chunk = x + "#" + z + "#" + world;
                     if (!Utilities.chunks.contains(chunk)) {
-                        Utilities.msg(s, "&cChunk &f(" + x + "," + z + ")&c in world &f'" + world + "'&c isn't marked.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&cChunk &f(" + x + ", " + z + ")&c in &f'" + world + "'&c isn't marked.");
                     } else {
-                        if (Utilities.config.getBoolean("general.debug")) {
-                            Utilities.consoleMsg(Strings.DEBUGPREFIX + "Releasing chunk (" + x + "," + z + ") in world '" + world + "'...");
-                        }
                         Utilities.chunks.remove(chunk);
                         Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, false);
                         Utilities.data.set("chunks", new ArrayList<>(Utilities.chunks));
                         Utilities.saveDataFile();
                         Utilities.reloadDataFile();
-                        Utilities.msg(s, "&fReleased chunk &9(" + x + "," + z + ")&f in world &6'" + world + "'&f.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&fReleased chunk &9(" + x + ", " + z + ")&f in &6'" + world + "'&f.");
                     }
                 } catch (NumberFormatException ex) {
                     Utilities.msg(s, Strings.UNUSABLE);
@@ -89,8 +83,7 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
             tabs.add("coords");
         }
         if (args[1].equals("coords")) {
-            if (s instanceof Player) {
-                Player player = (Player) s;
+            if (s instanceof Player player) {
                 Location loc = player.getLocation();
                 if (newArgs.length == 2) {
                     tabs.add(String.valueOf(loc.getChunk().getX()));
@@ -106,10 +99,10 @@ public class Command_Releasechunk implements CommandExecutor, TabCompleter {
                 }
             } else {
                 if (newArgs.length == 2) {
-                    tabs.add("<0>");
+                    tabs.add("<x>");
                 }
                 if (newArgs.length == 3) {
-                    tabs.add("<0>");
+                    tabs.add("<z>");
                 }
                 if (newArgs.length == 4) {
                     tabs.add("<world>");

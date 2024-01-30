@@ -22,8 +22,10 @@ public class Events implements Listener {
         final String chunk = currentChunk.getX() + "#" + currentChunk.getZ() + "#"
                 + currentChunk.getWorld().getName();
         if (new HashSet<>(Utilities.chunks).contains(chunk)) {
-            if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsg(Strings.DEBUGPREFIX + "Chunk (" + currentChunk.getX() + "," + currentChunk.getZ() + ") in world '" + currentChunk.getWorld().getName() + "' is unloading, while it should be force-loaded.");
+            try {
+                Bukkit.getServer().getWorld(currentChunk.getWorld().getName()).loadChunk(currentChunk.getX(), currentChunk.getZ());
+                Bukkit.getServer().getWorld(currentChunk.getWorld().getName()).loadChunk(currentChunk.getX(), currentChunk.getZ(), true);
+            } catch (NullPointerException ignored) {
             }
         }
     }
@@ -47,16 +49,10 @@ public class Events implements Listener {
             final int x = Integer.parseInt(chunkCoordinates[0]);
             final int z = Integer.parseInt(chunkCoordinates[1]);
             final String world = chunkCoordinates[2];
-            if (Utilities.config.getBoolean("general.debug")) {
-                Utilities.consoleMsg(Strings.DEBUGPREFIX + "Loading chunk (" + x + "," + z + ") in world '" + world + "'.");
-            }
             try {
                 Bukkit.getServer().getWorld(world).loadChunk(x, z);
                 Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
-            } catch (NullPointerException ex) {
-                if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "World '" + world + "' doesn't exist, or isn't loaded in memory.");
-                }
+            } catch (NullPointerException ignored) {
             }
         }
     }
@@ -65,10 +61,8 @@ public class Events implements Listener {
     public void onUpdateAvailable(PlayerJoinEvent e) {
         if ((e.getPlayer().hasPermission("keepchunks.notify.update")) && Utilities.config.getBoolean("updates.check") && Utilities.config.getBoolean("updates.notify") && Utilities.updateAvailable()) {
             Bukkit.getScheduler().runTaskLaterAsynchronously(Main.plugin, () -> {
-                Utilities.msg(e.getPlayer(), Strings.GAMEPREFIX + "&fA new release of &a" + Strings.PLUGIN + "&f is available!");
-                Utilities.msg(e.getPlayer(), Strings.GAMEPREFIX + "&fCurrent version: &a" + Strings.VERSION + "&f; New version: &a" + Utilities.updateVersion() + "&f.");
-                Utilities.msg(e.getPlayer(), Strings.GAMEPREFIX + "&fTo download the update, visit this website:");
-                Utilities.msg(e.getPlayer(), Strings.GAMEPREFIX + "&a" + Strings.WEBSITE + "&f.");
+                Utilities.msg(e.getPlayer(), Strings.IGPREFIX + "&fA new &a" + Strings.PLUGIN + "&f update is available: &av" + Utilities.updateVersion() + "&f!");
+                Utilities.msg(e.getPlayer(), Strings.IGPREFIX + "&fDownload @ &a" + Strings.WEBSITE + "&f.");
             }, 90L);
         }
     }

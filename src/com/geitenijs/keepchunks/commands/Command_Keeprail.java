@@ -17,6 +17,8 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
     int totalChunks = 0;
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
+        totalRails = 0;
+        totalChunks = 0;
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("current")) {
                 if (s instanceof Player) {
@@ -31,10 +33,10 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                     HashSet<Location> explored = new HashSet<>();
                     Queue<Location> agenda = new LinkedList<>();
                     if (!isRail) {
-                        Utilities.msg(s, "&cThere doesn't seem to be a rail at your location.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&cThere don't seem to be rails at your location.");
                         return true;
                     } else {
-                        Utilities.msg(s, "&7&oLooking for rails...");
+                        Utilities.msg(s, Strings.IGPREFIX + "&7&oLooking for rails at &9&o(" + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + ")&7&o in &6&o'" + loc.getWorld().getName() + "'&7&o...");
                         agenda.add(loc);
                         while (!agenda.isEmpty()) {
                             Location cur = agenda.peek();
@@ -43,11 +45,13 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                             getAdjacent(cur, explored, agenda);
                             ++totalRails;
                         }
-                        Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");
-                        Utilities.msg(s, "&fMarked a total of &9" + totalChunks + "&f chunks in world &6'" + loc.getWorld().getName() + "'&f.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&fFound &c" + totalRails + "&f rails!");
+                        if (totalChunks == 0) {
+                            Utilities.msg(s, Strings.IGPREFIX + "&cEvery chunk around your railroad was already marked.");
+                            return true;
+                        }
+                        Utilities.msg(s, Strings.IGPREFIX + "&fMarked a total of &9" + totalChunks + "&f chunks in &6'" + loc.getWorld().getName() + "'&f.");
                     }
-                    totalRails = 0;
-                    totalChunks = 0;
                 } else {
                     Utilities.msg(s, Strings.ONLYPLAYER);
                 }
@@ -62,7 +66,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                     final int z = Integer.parseInt(args[4]);
                     final String world = args[5];
                     if (Bukkit.getWorld(world) == null) {
-                        Utilities.msg(s, "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&cWorld &f'" + world + "'&c doesn't exist, or isn't loaded in memory.");
                         return false;
                     }
                     World realWorld = Bukkit.getWorld(world);
@@ -77,10 +81,10 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                     HashSet<Location> explored = new HashSet<>();
                     Queue<Location> agenda = new LinkedList<>();
                     if (!isRail) {
-                        Utilities.msg(s, "&cThere doesn't seem to be a rail at that location.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&cThere don't seem to be rails at that location.");
                         return true;
                     } else {
-                        Utilities.msg(s, "&7&oLooking for rails...");
+                        Utilities.msg(s, Strings.IGPREFIX + "&7&oLooking for rails at &9&o(" + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + ")&7&o in &6&o'" + loc.getWorld().getName() + "'&7&o...");
                         agenda.add(loc);
                         while (!agenda.isEmpty()) {
                             Location cur = agenda.peek();
@@ -89,11 +93,13 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                             getAdjacent(cur, explored, agenda);
                             ++totalRails;
                         }
-                        Utilities.msg(s, "&fFound &c" + totalRails + "&f rails!");
-                        Utilities.msg(s, "&fMarked a total of &9" + totalChunks + "&f chunks in world &6'" + loc.getWorld().getName() + "'&f.");
+                        Utilities.msg(s, Strings.IGPREFIX + "&fFound &c" + totalRails + "&f rails!");
+                        if (totalChunks == 0) {
+                            Utilities.msg(s, Strings.IGPREFIX + "&cEvery chunk around your railroad was already marked.");
+                            return true;
+                        }
+                        Utilities.msg(s, Strings.IGPREFIX + "&fMarked a total of &9" + totalChunks + "&f chunks in &6'" + loc.getWorld().getName() + "'&f.");
                     }
-                    totalRails = 0;
-                    totalChunks = 0;
                 } catch (NumberFormatException ex) {
                     Utilities.msg(s, Strings.UNUSABLE);
                 }
@@ -112,9 +118,6 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
             Material m = candidate.getBlock().getType();
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
             if (isRail && !history.contains(candidate) && !todo.contains(candidate)) {
-                if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
-                }
                 updateData(candidate.getChunk());
                 todo.add(candidate);
             }
@@ -127,9 +130,6 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
             Material m = candidate.getBlock().getType();
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
             if (isRail && !history.contains(candidate) && !todo.contains(candidate)) {
-                if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
-                }
                 updateData(candidate.getChunk());
                 todo.add(candidate);
             }
@@ -142,9 +142,6 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
             Material m = candidate.getBlock().getType();
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
             if (isRail && !history.contains(candidate) && !todo.contains(candidate)) {
-                if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
-                }
                 updateData(candidate.getChunk());
                 todo.add(candidate);
             }
@@ -157,9 +154,6 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
             Material m = candidate.getBlock().getType();
             boolean isRail = (m == Material.RAIL || m == Material.POWERED_RAIL || m == Material.ACTIVATOR_RAIL || m == Material.DETECTOR_RAIL);
             if (isRail && !history.contains(candidate) && !todo.contains(candidate)) {
-                if (Utilities.config.getBoolean("general.debug")) {
-                    Utilities.consoleMsg(Strings.DEBUGPREFIX + "Found chunk (" + pos.getChunk().getX() + "," + pos.getChunk().getZ() + ") in world '" + pos.getWorld().getName() + "' while discovering rails at (" + pos.getBlockX() + "," + pos.getBlockY() + "," + pos.getBlockZ() + ").");
-                }
                 updateData(candidate.getChunk());
                 todo.add(candidate);
             }
@@ -181,9 +175,6 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                 final int z = currentChunk.getZ() + j;
                 final String chunk = x + "#" + z + "#" + world;
                 if (!Utilities.chunks.contains(chunk)) {
-                    if (Utilities.config.getBoolean("general.debug")) {
-                        Utilities.consoleMsg(Strings.DEBUGPREFIX + "Marking chunk (" + x + "," + z + ") in world '" + world + "'...");
-                    }
                     Utilities.chunks.add(chunk);
                     Bukkit.getServer().getWorld(world).loadChunk(x, z);
                     Bukkit.getServer().getWorld(world).setChunkForceLoaded(x, z, true);
@@ -204,8 +195,7 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
             tabs.add("coords");
         }
         if (args[1].equals("coords")) {
-            if (s instanceof Player) {
-                Player player = (Player) s;
+            if (s instanceof Player player) {
                 Location loc = player.getLocation();
                 if (newArgs.length == 2) {
                     tabs.add(String.valueOf(loc.getBlockX()));
@@ -221,13 +211,13 @@ public class Command_Keeprail implements CommandExecutor, TabCompleter {
                 }
             } else {
                 if (newArgs.length == 2) {
-                    tabs.add("<0>");
+                    tabs.add("<x>");
                 }
                 if (newArgs.length == 3) {
-                    tabs.add("<0>");
+                    tabs.add("<y>");
                 }
                 if (newArgs.length == 4) {
-                    tabs.add("<0>");
+                    tabs.add("<z>");
                 }
                 if (newArgs.length == 5) {
                     tabs.add("<world>");
