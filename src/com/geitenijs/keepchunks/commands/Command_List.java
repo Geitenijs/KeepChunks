@@ -23,7 +23,7 @@ public class Command_List implements CommandExecutor, TabCompleter {
                     final int x = Integer.parseInt(chunkCoordinates[0]);
                     final int z = Integer.parseInt(chunkCoordinates[1]);
                     final String world = chunkCoordinates[2];
-                    Utilities.msg(s, Strings.IGPREFIX + "&fChunk &9(" + x + ", " + z + ") &fworld &6'" + world + "'&f.");
+                    Utilities.msg(s, "&fChunk &9(" + x + ", " + z + ") &fworld &6'" + world + "'&f.");
                 }
                 Utilities.msg(s, Strings.LINE);
                 Utilities.msg(s, Strings.IGPREFIX + "&aA total of &f" + Utilities.chunks.size() + "&a chunks are currently marked.");
