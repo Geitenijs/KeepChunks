@@ -12,7 +12,7 @@ public class Main extends JavaPlugin {
         Utilities.registerCommandsAndCompletions();
         Utilities.registerEvents();
         Utilities.loadChunks();
-        Utilities.startSchedulers();
+        Utilities.startTasks();
         Utilities.startMetrics();
         Utilities.pluginBanner();
         Utilities.done();
@@ -23,6 +23,6 @@ public class Main extends JavaPlugin {
         Utilities.saveConfigFile();
         Utilities.reloadDataFile();
         Utilities.saveDataFile();
-        Utilities.stopSchedulers();
+        Utilities.stopTasks();
     }
 }

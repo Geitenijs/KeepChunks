@@ -121,11 +121,11 @@ public class Utilities {
         }
     }
 
-    static void startSchedulers() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.plugin, Utilities::checkForUpdates, 190L, 216000L);
+    static void startTasks() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, Utilities::checkForUpdates, 190L);
     }
 
-    static void stopSchedulers() {
+    static void stopTasks() {
         Bukkit.getScheduler().cancelTasks(Main.plugin);
     }
 
@@ -227,10 +227,8 @@ public class Utilities {
     }
 
     public static void msg(final CommandSender s, String msg) {
-        if (s instanceof Player) {
-            msg = ChatColor.translateAlternateColorCodes('&', msg);
-        } else {
-            msg = ChatColor.translateAlternateColorCodes('&', Strings.INTERNALPREFIX + msg);
+        msg = ChatColor.translateAlternateColorCodes('&', msg);
+        if (!(s instanceof Player)) {
             if (!config.getBoolean("general.colourfulconsole")) {
                 msg = ChatColor.stripColor(msg);
             }
