@@ -7,14 +7,14 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HelpCommand extends KeepChunkBaseCommand{
+public class HelpCommand extends BasicKeepChunksCommand {
 
-    public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if (args.length != 1) {
-            msgCommandSender(s, Strings.HELPUSAGE);
+            msgCommandSender(sender, Strings.HELPUSAGE);
             return false;
         }
-        msgCommandSender(s,"""
+        msgCommandSender(sender,"""
             &8/&akc help  &7-&f  Shows this list
             &8/&akc reload  &7-&f  Reload the plugin
             &8/&akc list  &7-&f  List all marked chunks
@@ -30,7 +30,7 @@ public class HelpCommand extends KeepChunkBaseCommand{
         return true;
     }
 
-    public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
         return CommandWrapper.filterTabs(tabs, args);
     }

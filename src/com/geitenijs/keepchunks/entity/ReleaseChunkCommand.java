@@ -1,7 +1,7 @@
 package com.geitenijs.keepchunks.entity;
 
 import com.geitenijs.keepchunks.commands.CommandWrapper;
-import com.geitenijs.keepchunks.service.DatabaseService;
+import com.geitenijs.keepchunks.service.ChunkService;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -13,24 +13,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ReleaseChunkCommand extends KeepChunkBaseCommand{
-    public boolean onCommand(CommandSender s, Command c, String label, String[] args) {
-        final boolean userGaveCurrentLocation = args.length == 2 && args[1].equalsIgnoreCase("current") && s instanceof Player;
+public class ReleaseChunkCommand extends BasicKeepChunksCommand {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        final boolean userGaveCurrentLocation = args.length == 2 && args[1].equalsIgnoreCase("current") && sender instanceof Player;
         final boolean userGaveCoords = args.length == 5 && args[1].equalsIgnoreCase("coords");
 
         if (userGaveCurrentLocation) {
-            final Location currentLocation = ((Entity) s).getLocation();
+            final Location currentLocation = ((Entity) sender).getLocation();
             final Chunk currentChunk = currentLocation.getChunk();
             final String chunkString = String.format("{}#{}#{}", currentChunk.getX(),currentChunk.getZ(),currentChunk.getWorld());
 
-            DatabaseService.getInstance().unmarkChunks(Arrays.asList(chunkString));
+            ChunkService.getInstance().unmarkChunks(Arrays.asList(chunkString));
             //TODO: Print success to user
             return true;
         }
 
         if (userGaveCoords) {
             final String chunkString = String.format("{}#{}#{}", args[2], args[3], args[4]);
-            DatabaseService.getInstance().unmarkChunks(Arrays.asList(chunkString));
+            ChunkService.getInstance().unmarkChunks(Arrays.asList(chunkString));
             //TODO: Print success to user
             return true;
         }
@@ -40,7 +40,7 @@ public class ReleaseChunkCommand extends KeepChunkBaseCommand{
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
         String[] newArgs = CommandWrapper.getArgs(args);
         if (newArgs.length == 1) {
@@ -48,8 +48,8 @@ public class ReleaseChunkCommand extends KeepChunkBaseCommand{
             tabs.add("coords");
         }
         if (args[1].equals("coords")) {
-            if (s instanceof Player) {
-                Player player = (Player) s;
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
                 Location loc = player.getLocation();
                 if (newArgs.length == 2) {
                     tabs.add(String.valueOf(loc.getChunk().getX()));

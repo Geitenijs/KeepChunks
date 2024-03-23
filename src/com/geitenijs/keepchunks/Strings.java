@@ -1,16 +1,20 @@
 package com.geitenijs.keepchunks;
 
+/**
+ * Contains various common strings referenced across the plugin
+ */
 public class Strings {
 
-    static final String PLUGIN = "KeepChunks";
-    static final String INTERNALPREFIX = "[KeepChunks] ";
+    public static final String PLUGIN = "KeepChunks";
+    public static final String PLUGIN_PREFIX = "[KeepChunks] ";
+
     public static final String DEBUGPREFIX = "[DEBUG] ";
     public static final String GAMEPREFIX = "&2Keep&8Chunks &7// ";
     public static final String VERSION = "1.6.10";
     public static final String AUTHOR = "Geitenijs";
-    static final int RESOURCEID = 23307;
-    static final String WEBSITE = "https://www.spigotmc.org/resources/" + Strings.RESOURCEID;
-    static final String ASCIILOGO = "" +
+    public static final int RESOURCEID = 23307;
+    public static final String WEBSITE = "https://www.spigotmc.org/resources/" + RESOURCEID;
+    public static final String ASCIILOGO = "" +
             "\n _     _                   _______ _                 _          " +
             "\n(_)   | |                 (_______) |               | |  v" + Strings.VERSION +
             "\n _____| |_____ _____ ____  _      | |__  _   _ ____ | |  _  ___ " +
@@ -24,19 +28,19 @@ public class Strings {
     public static final String UNUSABLE = "&cOne or more values you've entered are unusable.";
     public static final String ONLYCONSOLE = "&cYou can only do that from the console.";
     public static final String ONLYPLAYER = "&cYou can only do that as an in-game player.";
-    static final String NOSTAT = "None";
+    public static final String NOSTAT = "None";
     public static final String WEFIRST = "&cYou have to select an area with WorldEdit first.";
     public static final String NOWE = "&cThis requires you to have WorldEdit installed.";
     public static final String NOWG = "&cThis requires you to have WorldGuard installed.";
     public static final String UPDATEWE = "&cThis requires you to have WorldEdit version 7.0.0 or newer installed.";
     public static final String UPDATEWG = "&cThis requires you to have WorldGuard version 7.0.0 or newer installed.";
 
-    static final String DEPENDENCIES_WE_COMPATIBLE = "Found a compatible version of WorldEdit! (7.0.0+)";
-    static final String DEPENDENCIES_WE_INCOMPATIBLE = "The required version of WorldEdit for " + Strings.PLUGIN + " v" + Strings.VERSION + " is 7.0.0 or newer.";
-    static final String DEPENDENCIES_WE_MISSING = "WorldEdit plugin not found. " + Strings.PLUGIN + " will have reduced functionality.";
-    static final String DEPENDENCIES_WG_COMPATIBLE = "Found a compatible version of WorldGuard! (7.0.0+)";
-    static final String DEPENDENCIES_WG_INCOMPATIBLE = "The required version of WorldGuard for " + Strings.PLUGIN + " v" + Strings.VERSION + " is 7.0.0 or newer.";
-    static final String DEPENDENCIES_WG_MISSING = "WorldGuard plugin not found. " + Strings.PLUGIN + " will have reduced functionality.";
+    public static final String DEPENDENCIES_WE_COMPATIBLE = "Found a compatible version of WorldEdit! (7.0.0+)";
+    public static final String DEPENDENCIES_WE_INCOMPATIBLE = "The required version of WorldEdit for " + Strings.PLUGIN + " v" + Strings.VERSION + " is 7.0.0 or newer.";
+    public static final String DEPENDENCIES_WE_MISSING = "WorldEdit plugin not found. " + Strings.PLUGIN + " will have reduced functionality.";
+    public static final String DEPENDENCIES_WG_COMPATIBLE = "Found a compatible version of WorldGuard! (7.0.0+)";
+    public static final String DEPENDENCIES_WG_INCOMPATIBLE = "The required version of WorldGuard for " + Strings.PLUGIN + " v" + Strings.VERSION + " is 7.0.0 or newer.";
+    public static final String DEPENDENCIES_WG_MISSING = "WorldGuard plugin not found. " + Strings.PLUGIN + " will have reduced functionality.";
 
     public static final String HELPUSAGE = "&fUsage: &c/kc help";
     public static final String RELOADUSAGE = "&fUsage: &c/kc reload";

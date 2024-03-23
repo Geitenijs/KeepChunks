@@ -2,10 +2,9 @@ package com.geitenijs.keepchunks.entity;
 
 import com.geitenijs.keepchunks.Hooks;
 import com.geitenijs.keepchunks.commands.CommandWrapper;
-import com.geitenijs.keepchunks.commands.hooks.Chunkinfo_WE;
-import com.geitenijs.keepchunks.commands.hooks.Chunkinfo_WG;
-import com.geitenijs.keepchunks.service.DatabaseService;
-import org.bukkit.Chunk;
+import com.geitenijs.keepchunks.service.ChunkService;
+import static com.geitenijs.keepchunks.Strings.*;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -18,43 +17,52 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChunkInfoCommand extends KeepChunkBaseCommand {
+public class ChunkInfoCommand extends BasicKeepChunksCommand {
     private CommandExecutor WEChunkinfo;
     private CommandExecutor WGChunkinfo;
     private TabCompleter WEChunkinfoTab;
     private TabCompleter WGChunkinfoTab;
 
-    //TODO: Update these WE/WG references later...
-    public ChunkInfoCommand() {
-        if (Hooks.WorldEdit) {
-            WEChunkinfo = new Chunkinfo_WE();
-            WEChunkinfoTab = new Chunkinfo_WE();
-        }
-        if (Hooks.WorldGuard) {
-            WGChunkinfo = new Chunkinfo_WG();
-            WGChunkinfoTab = new Chunkinfo_WG();
-        }
+    @Override
+    public CommandName getCommandName(){
+        return CommandName.CHUNK_INFO;
     }
 
     @Override
-    public boolean onCommand(CommandSender s, Command c, String label, String[] args) {
+    public String getCommandUsage(){
+        return CHUNKINFOUSAGE;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        //TODO: I don't think this can even be triggered, under the correct context
         if(args.length == 0){
             //TODO: Print command usage msg...
             return false;
         }
-        //TODO: Add WG/WE Hook checks to these bools
-        final boolean userGaveCurrentLocation = args.length == 2 && args[1].equalsIgnoreCase("current") && s instanceof Player;
+
+        final boolean userGaveCurrentLocation = args.length == 2 && args[1].equalsIgnoreCase("current") && sender instanceof Player;
         final boolean userGaveCoords = args.length == 5 && args[1].equalsIgnoreCase("coords");
-        final boolean usingWorldEdit = args.length == 2 && args[1].equalsIgnoreCase("worldedit");
-        final boolean usingWorldGuard = args.length == 4 && args[1].equalsIgnoreCase("worldguard");
+        final boolean usingWorldEdit = configs.isWorldEditSupported() && args.length == 2 && args[1].equalsIgnoreCase("worldedit");
+        final boolean usingWorldGuard = configs.isWorldGuardSupported() && args.length == 4 && args[1].equalsIgnoreCase("worldguard");
+
+        if(usingWorldEdit){
+            //Run WorldEdit hook
+            return true;
+        }
+
+        if(usingWorldGuard){
+            //Run WorldGuard hook
+            return true;
+        }
 
         if(userGaveCurrentLocation){
-            final Location currentLocation = ((Entity) s).getLocation();
-            final Chunk currentChunk = currentLocation.getChunk();
+            final Location currentLocation = ((Entity) sender).getLocation();
+            final org.bukkit.Chunk currentChunk = currentLocation.getChunk();
             final int chunkX = currentChunk.getX();
             final int chunkZ = currentChunk.getZ();
             final World world = currentChunk.getWorld();
-            final com.geitenijs.keepchunks.entity.Chunk chunk = new com.geitenijs.keepchunks.entity.Chunk(chunkX,chunkZ, world.getName());
+            final Chunk chunk = new Chunk(currentChunk);
 
             //Generate chunk information message
             final String chunkInfoMsg = String.format(
@@ -71,29 +79,29 @@ public class ChunkInfoCommand extends KeepChunkBaseCommand {
                 currentLocation.getBlockX(),currentLocation.getBlockY(),currentLocation.getBlockZ(),
                 chunkX,chunkZ,
                 world.getName(),
-                DatabaseService.getInstance().getChunks().contains(chunk) ? "&2Yes" : "&4No",
+                ChunkService.getInstance().getChunks().contains(chunk) ? "&2Yes" : "&4No",
                 world.isChunkForceLoaded(chunkX,chunkZ) ? "&2Yes" : "&4No",
                 world.isChunkLoaded(chunkX,chunkZ) ? "&2Yes" : "&4No"
             );
             //Send chunk info to user
-            msgCommandSender(s,chunkInfoMsg);
+            msgCommandSender(sender,chunkInfoMsg);
             return true;
         }
 
         if(userGaveCoords){
-            final String chunkString = String.format("{}#{}#{}",args[2], args[3], args[4]);            final String[] validChunk = DatabaseService.validateChunkString(chunkString);
+            final String chunkString = String.format("{}#{}#{}",args[2], args[3], args[4]);
+            final String[] validChunk = ChunkService.validateChunkString(chunkString);
 
             if(validChunk == null){
                 //TODO: Print error message
                 return false;
             }
 
-            final Location currentLocation = ((Entity) s).getLocation();
-            final Chunk currentChunk = currentLocation.getChunk();
+            final Location currentLocation = ((Entity) sender).getLocation();
+            final org.bukkit.Chunk currentChunk = currentLocation.getChunk();
             final int chunkX = currentChunk.getX();
             final int chunkZ = currentChunk.getZ();
             final World world = currentChunk.getWorld();
-            final com.geitenijs.keepchunks.entity.Chunk chunk = new com.geitenijs.keepchunks.entity.Chunk(x, z, world);
 
             //Generate chunk information message
             final String chunkInfoMsg = String.format(
@@ -108,28 +116,19 @@ public class ChunkInfoCommand extends KeepChunkBaseCommand {
                     """,
                     chunkX,chunkZ,
                     world.getName(),
-                    DatabaseService.getInstance().getChunks().contains(chunk) ? "&2Yes" : "&4No",
+                    chunkDatabase.getChunks().contains(chunk) ? "&2Yes" : "&4No",
                     world.isChunkForceLoaded(chunkX,chunkZ) ? "&2Yes" : "&4No",
                     world.isChunkLoaded(chunkX,chunkZ) ? "&2Yes" : "&4No"
             );
             //Send chunk info to user
-            msgCommandSender(s,chunkInfoMsg);
+            msgCommandSender(sender,chunkInfoMsg);
             return true;
         }
-
-        if(usingWorldEdit){
-        //Do WE hook
-        }
-
-        if(usingWorldGuard){
-            //Do WG hook
-        }
-
         return false;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
         String[] newArgs = CommandWrapper.getArgs(args);
         if (newArgs.length == 1) {
@@ -139,8 +138,8 @@ public class ChunkInfoCommand extends KeepChunkBaseCommand {
             tabs.add("worldguard");
         }
         if (args[1].equals("coords")) {
-            if (s instanceof Player) {
-                Player player = (Player) s;
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
                 Location loc = player.getLocation();
                 if (newArgs.length == 2) {
                     tabs.add(String.valueOf(loc.getChunk().getX()));
@@ -168,12 +167,12 @@ public class ChunkInfoCommand extends KeepChunkBaseCommand {
         }
         if (args[1].equals("worldedit")) {
             if (Hooks.WorldEdit) {
-                return WEChunkinfoTab.onTabComplete(s, c, label, args);
+                return WEChunkinfoTab.onTabComplete(sender, cmd, label, args);
             }
         }
         if (args[1].equals("worldguard")) {
             if (Hooks.WorldGuard) {
-                return WGChunkinfoTab.onTabComplete(s, c, label, args);
+                return WGChunkinfoTab.onTabComplete(sender, cmd, label, args);
             }
         }
         return CommandWrapper.filterTabs(tabs, args);

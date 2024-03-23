@@ -4,7 +4,7 @@ import com.geitenijs.keepchunks.Hooks;
 import com.geitenijs.keepchunks.commands.CommandWrapper;
 import com.geitenijs.keepchunks.commands.hooks.Keepregion_WE;
 import com.geitenijs.keepchunks.commands.hooks.Keepregion_WG;
-import com.geitenijs.keepchunks.service.DatabaseService;
+import com.geitenijs.keepchunks.service.ChunkService;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReleaseRegionCommand extends KeepChunkBaseCommand {
+public class ReleaseRegionCommand extends BasicKeepChunksCommand {
 
     private CommandExecutor WEKeepregion;
     private CommandExecutor WGKeepregion;
@@ -33,7 +33,7 @@ public class ReleaseRegionCommand extends KeepChunkBaseCommand {
         }
     }
 
-    public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if(args.length == 0){
             //TODO: Error
         }
@@ -50,8 +50,8 @@ public class ReleaseRegionCommand extends KeepChunkBaseCommand {
         }
 
         if(usingCoords){
-            final String[] validMinChunk = DatabaseService.validateChunkString(String.format("{}#{}#{}",args[2],args[3],args[6]));
-            final String[] validMaxChunk = DatabaseService.validateChunkString(String.format("{}#{}#{}",args[4],args[5],args[6]));
+            final String[] validMinChunk = ChunkService.validateChunkString(String.format("{}#{}#{}",args[2],args[3],args[6]));
+            final String[] validMaxChunk = ChunkService.validateChunkString(String.format("{}#{}#{}",args[4],args[5],args[6]));
             final boolean coordsAreInvalid = validMinChunk == null || validMaxChunk == null;
 
             if(coordsAreInvalid){
@@ -68,13 +68,13 @@ public class ReleaseRegionCommand extends KeepChunkBaseCommand {
                     chunksToUnload.add(String.format("{}#{}#{}", x, z, world));
                 }
             }
-            DatabaseService.getInstance().unmarkChunks(chunksToUnload);
+            ChunkService.getInstance().unmarkChunks(chunksToUnload);
             return true;
         }
         return false;
     }
 
-    public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
         String[] newArgs = CommandWrapper.getArgs(args);
         if (newArgs.length == 1) {
@@ -83,11 +83,11 @@ public class ReleaseRegionCommand extends KeepChunkBaseCommand {
             tabs.add("worldguard");
         }
         if (args[1].equals("coords")) {
-            if (s instanceof Player) {
-                Player player = (Player) s;
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
                 Location loc = player.getLocation();
                 if (Hooks.WorldEdit) {
-                    return WEKeepregionTab.onTabComplete(s, c, label, args);
+                    return WEKeepregionTab.onTabComplete(sender, cmd, label, args);
                 } else {
                     if (newArgs.length == 2) {
                         tabs.add(String.valueOf(loc.getChunk().getX()));
@@ -132,12 +132,12 @@ public class ReleaseRegionCommand extends KeepChunkBaseCommand {
         }
         if (args[1].equals("worldedit")) {
             if (Hooks.WorldEdit) {
-                return WEKeepregionTab.onTabComplete(s, c, label, args);
+                return WEKeepregionTab.onTabComplete(sender, cmd, label, args);
             }
         }
         if (args[1].equals("worldguard")) {
             if (Hooks.WorldGuard) {
-                return WGKeepregionTab.onTabComplete(s, c, label, args);
+                return WGKeepregionTab.onTabComplete(sender, cmd, label, args);
             }
         }
         return CommandWrapper.filterTabs(tabs, args);

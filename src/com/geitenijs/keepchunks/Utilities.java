@@ -224,7 +224,7 @@ public class Utilities {
         if (s instanceof Player) {
             msg = ChatColor.translateAlternateColorCodes('&', msg);
         } else {
-            msg = ChatColor.translateAlternateColorCodes('&', Strings.INTERNALPREFIX + msg);
+            msg = ChatColor.translateAlternateColorCodes('&', Strings.PLUGIN_PREFIX + msg);
             if (!config.getBoolean("general.colourfulconsole")) {
                 msg = ChatColor.stripColor(msg);
             }
@@ -233,7 +233,7 @@ public class Utilities {
     }
 
     public static void consoleMsg(String msg) {
-        msg = ChatColor.translateAlternateColorCodes('&', Strings.INTERNALPREFIX + msg);
+        msg = ChatColor.translateAlternateColorCodes('&', Strings.PLUGIN_PREFIX + msg);
         if (!config.getBoolean("general.colourfulconsole")) {
             msg = ChatColor.stripColor(msg);
         }

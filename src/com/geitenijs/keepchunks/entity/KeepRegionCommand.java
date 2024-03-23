@@ -1,43 +1,17 @@
 package com.geitenijs.keepchunks.entity;
 
 import com.geitenijs.keepchunks.Hooks;
-import com.geitenijs.keepchunks.Strings;
-import com.geitenijs.keepchunks.Utilities;
 import com.geitenijs.keepchunks.commands.CommandWrapper;
-import com.geitenijs.keepchunks.commands.hooks.Keepregion_WE;
-import com.geitenijs.keepchunks.commands.hooks.Keepregion_WG;
-import com.geitenijs.keepchunks.service.DatabaseService;
-import org.bukkit.Bukkit;
+import com.geitenijs.keepchunks.service.ChunkService;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Integer.max;
-import static java.lang.Integer.min;
-
-public class KeepRegionCommand extends KeepChunkBaseCommand {
-
-    private CommandExecutor WEKeepregion;
-    private CommandExecutor WGKeepregion;
-    private TabCompleter WEKeepregionTab;
-    private TabCompleter WGKeepregionTab;
-
-    KeepRegionCommand() {
-        if (Hooks.WorldEdit) {
-            WEKeepregion = new Keepregion_WE();
-            WEKeepregionTab = new Keepregion_WE();
-        }
-        if (Hooks.WorldGuard) {
-            WGKeepregion = new Keepregion_WG();
-            WGKeepregionTab = new Keepregion_WG();
-        }
-    }
+public class KeepRegionCommand extends BasicKeepChu {
 
     public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
         if(args.length == 0){
@@ -56,8 +30,8 @@ public class KeepRegionCommand extends KeepChunkBaseCommand {
         }
 
         if(usingCoords){
-            final String[] validMinChunk = DatabaseService.validateChunkString(String.format("{}#{}#{}",args[2],args[3],args[6]));
-            final String[] validMaxChunk = DatabaseService.validateChunkString(String.format("{}#{}#{}",args[4],args[5],args[6]));
+            final String[] validMinChunk = ChunkService.validateChunkString(String.format("{}#{}#{}",args[2],args[3],args[6]));
+            final String[] validMaxChunk = ChunkService.validateChunkString(String.format("{}#{}#{}",args[4],args[5],args[6]));
             final boolean coordsAreInvalid = validMinChunk == null || validMaxChunk == null;
 
             if(coordsAreInvalid){
@@ -74,7 +48,7 @@ public class KeepRegionCommand extends KeepChunkBaseCommand {
                     chunksToLoad.add(String.format("{}#{}#{}", x, z, world));
                 }
             }
-            DatabaseService.getInstance().markChunks(chunksToLoad);
+            ChunkService.getInstance().markChunks(chunksToLoad);
             return true;
         }
         return false;

@@ -7,15 +7,15 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainCommand extends KeepChunkBaseCommand{
+public class MainCommand extends BasicKeepChunksCommand {
 
-    public boolean onCommand(final CommandSender s, final Command c, final String label, final String[] args) {
-        msgCommandSender(s, Strings.GAMEPREFIX + "&fRunning &9v" + Strings.VERSION);
-        msgCommandSender(s, Strings.GAMEPREFIX + "&fMade by &6" + Strings.AUTHOR + "&f, since 2015");
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
+        msgCommandSender(sender, Strings.GAMEPREFIX + "&fRunning &9v" + Strings.VERSION);
+        msgCommandSender(sender, Strings.GAMEPREFIX + "&fMade by &6" + Strings.AUTHOR + "&f, since 2015");
         return true;
     }
 
-    public List<String> onTabComplete(CommandSender s, Command c, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         ArrayList<String> tabs = new ArrayList<>();
         tabs.add("help");
         tabs.add("reload");
