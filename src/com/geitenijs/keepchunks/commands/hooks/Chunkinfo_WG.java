@@ -44,8 +44,8 @@ public class Chunkinfo_WG implements CommandExecutor, TabCompleter {
         } else {
             BlockVector3 max = manager.getRegion(region).getMaximumPoint();
             BlockVector3 min = manager.getRegion(region).getMinimumPoint();
-            Location maxPoint = new Location(realWorld, max.getBlockX(), max.getBlockY(), max.getBlockZ());
-            Location minPoint = new Location(realWorld, min.getBlockX(), min.getBlockY(), min.getBlockZ());
+            Location maxPoint = new Location(realWorld, max.x(), max.y(), max.z());
+            Location minPoint = new Location(realWorld, min.x(), min.y(), min.z());
             final Chunk chunkMax = maxPoint.getChunk();
             final Chunk chunkMin = minPoint.getChunk();
             final int maxPointX = maxPoint.getBlockX();

@@ -38,8 +38,8 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
                 assert player != null;
-                Location maxPoint = new Location(player.getWorld(), max.getBlockX(), max.getBlockY(), max.getBlockZ());
-                Location minPoint = new Location(player.getWorld(), min.getBlockX(), min.getBlockY(), min.getBlockZ());
+                Location maxPoint = new Location(player.getWorld(), max.x(), max.y(), max.z());
+                Location minPoint = new Location(player.getWorld(), min.x(), min.y(), min.z());
                 final Chunk chunkMax = maxPoint.getChunk();
                 final Chunk chunkMin = minPoint.getChunk();
                 final int maxZ = chunkMax.getZ();
@@ -93,10 +93,10 @@ public class Keepregion_WE implements CommandExecutor, TabCompleter {
                 BlockVector3 max = sel.getMaximumPoint();
                 BlockVector3 min = sel.getMinimumPoint();
                 assert wePlayer != null;
-                Location maxPoint = new Location(wePlayer.getWorld(), max.getBlockX(), max.getBlockY(),
-                        max.getBlockZ());
-                Location minPoint = new Location(wePlayer.getWorld(), min.getBlockX(), min.getBlockY(),
-                        min.getBlockZ());
+                Location maxPoint = new Location(wePlayer.getWorld(), max.x(), max.y(),
+                        max.z());
+                Location minPoint = new Location(wePlayer.getWorld(), min.x(), min.y(),
+                        min.z());
                 final Chunk chunkMax = maxPoint.getChunk();
                 final Chunk chunkMin = minPoint.getChunk();
                 final int maxZ = chunkMax.getZ();
